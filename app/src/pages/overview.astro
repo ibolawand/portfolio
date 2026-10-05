@@ -1,0 +1,359 @@
+---
+// src/pages/index.astro
+import "../styles/global.css";
+import Navbar from "../components/Navbar.astro"
+
+interface Project {
+  title: string;
+  description: string;
+  tags: string[];
+  link?: string;
+  github?: string;
+}
+
+interface SkillGroup {
+  label: string;
+  items: string[];
+}
+
+const developerName = "Lawand Ibo";
+const role = "Software Engineer & Systems Developer student at the htbla Leonding";
+const bio =
+  "I build performant full-stack applications and systems software, with a focus on clean architecture and reliable infrastructure.";
+const email = "ibolawand432@gmail.com";
+const githubProfile = "https://github.com/ibolawand";
+
+
+const skillGroups: SkillGroup[] = [
+  { label: "Languages", items: ["TypeScript", "Java", "c#","c++","python"] },
+  { label: "Frameworks", items: ["Angular", "Tailwind CSS","React"] },
+  { label: "Infrastructure", items: ["Docker", "PostgreSQL", "Linux"] },
+];
+
+const projects: Project[] = [
+  {
+    title: "Portfolio & home lab infrastructure",
+    description:
+      "Self-hosted portfolio and services running in Docker and served securely through a Cloudflare Tunnel.",
+    tags: ["Astro", "TypeScript", "Docker", "Cloudflare"],
+    github: "https://github.com/yourusername/portfolio",
+  },
+  {
+    title: "Fitness & activity tracking app",
+    description:
+      "Full-stack application with workout scheduling, live progress metrics, and a modular backend.",
+    tags: ["Java", "Angular", "PostgreSQL"],
+    github: "https://github.com/yourusername/gym-app",
+  },
+  {
+    title: "AI assistant & overlay pipeline",
+    description:
+      "Desktop assistant with a custom GUI overlay, real-time speech processing, and local LLM integration.",
+    tags: ["TypeScript", "Rust", "Python", "Local LLMs"],
+    github: "https://github.com/yourusername/aria-assistant",
+  },
+];
+
+const [firstName, ...restName] = developerName.split(" ");
+const lastName = restName.join(" ");
+const initials = developerName
+  .split(" ")
+  .map((part) => part[0])
+  .join("");
+const pad = (n: number) => String(n).padStart(2, "0");
+const first = projects[0];
+const description = `${developerName} – ${role}. ${bio}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#151b1a" />
+    <meta property="og:title" content={`${developerName} | ${role}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{developerName} | {role}</title>
+  </head>
+  <body>
+    <a href="#work" class="skip-link">Skip to projects</a>
+    <div id="cursor" class="cursor" aria-hidden="true">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <div class="stage">
+      <svg class="ring" viewBox="0 0 800 800" aria-hidden="true">
+        <circle cx="400" cy="400" r="380" pathLength="1"></circle>
+        <circle cx="400" cy="400" r="290"></circle>
+      </svg>
+
+      <Navbar initials={initials} email={email} />
+
+      <main class="stage-main">
+        <section class="intro" aria-label="About">
+          <div>
+            <h1 class="title">
+              <span class="line" style="--d: 0"><span>{firstName}</span></span>
+              <span class="line" style="--d: 1"><span>{lastName}</span></span>
+            </h1>
+            <p class="role">{role}</p>
+            <p class="bio">{bio}</p>
+          </div>
+
+          <div class="detail" aria-live="polite">
+            <p class="detail-index" id="detail-index">01</p>
+            <div class="detail-body" id="detail-body">
+              <h3 id="detail-title">{first.title}</h3>
+              <p class="detail-desc" id="detail-desc">{first.description}</p>
+              <ul class="tags" id="detail-tags" aria-label="Technologies used">
+                {first.tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+              <p class="detail-links">
+                <a
+                  id="detail-github"
+                  href={first.github ?? "#"}
+                  hidden={!first.github}
+                  target="_blank"
+                  rel="noopener noreferrer">Source code</a
+                >
+                <a
+                  id="detail-live"
+                  href={first.link ?? "#"}
+                  hidden={!first.link}
+                  target="_blank"
+                  rel="noopener noreferrer">Live demo</a
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="reel"
+          id="work"
+          aria-labelledby="work-title"
+          data-autoplay="off"
+        >
+          <header class="reel-head">
+            <h2 id="work-title">Projects</h2>
+            <div class="reel-tools">
+              <span>{projects.length} selected</span>
+              <button
+                type="button"
+                id="autoplay"
+                class="autoplay"
+                aria-pressed="false"
+              >
+                Autoplay
+              </button>
+            </div>
+          </header>
+          <ul class="episodes">
+            {
+              projects.map((p, i) => (
+                <li>
+                  <button
+                    type="button"
+                    class="episode"
+                    aria-pressed={i === 0 ? "true" : "false"}
+                    data-index={pad(i + 1)}
+                    data-title={p.title}
+                    data-desc={p.description}
+                    data-tags={JSON.stringify(p.tags)}
+                    data-github={p.github ?? ""}
+                    data-live={p.link ?? ""}
+                  >
+                    <span class="thumb" aria-hidden="true">
+                      {p.tags[0]}
+                    </span>
+                    <span class="ep-text">
+                      <span class="ep-num">{pad(i + 1)}</span>
+                      <strong>{p.title}</strong>
+                      <span class="ep-desc">{p.description}</span>
+                    </span>
+                  </button>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <div class="below">
+      <section id="stack" class="panel" aria-labelledby="stack-title">
+        <h2 id="stack-title">Technical stack</h2>
+        <div class="stack-groups">
+          {
+            skillGroups.map((group) => (
+              <div class="stack-group">
+                <h3>{group.label}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="contact" class="panel" aria-labelledby="contact-title">
+        <h2 id="contact-title">Have a project in mind?</h2>
+        <a class="mail" href={`mailto:${email}`}>{email}</a>
+        <p class="contact-extra">
+          Or browse the code on{" "}
+          <a href={githubProfile} target="_blank" rel="noopener noreferrer"
+            >GitHub</a
+          >.
+        </p>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>
+        &copy; {new Date().getFullYear()}{" "}
+        {developerName}. Built with Astro, served from a Docker container.
+      </p>
+    </footer>
+
+    <script>
+        document.addEventListener("astro:page-load", () => {
+    initCursor();
+  });
+      const buttons = Array.from(
+        document.querySelectorAll<HTMLButtonElement>(".episode"),
+      );
+      const $ = (id: string) => document.getElementById(id)!;
+      const stage = document.querySelector<HTMLElement>(".stage")!;
+      const intro = document.querySelector<HTMLElement>(".intro")!;
+      const reel = document.querySelector<HTMLElement>(".reel")!;
+      const toggle = $("autoplay") as HTMLButtonElement;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function setLink(id: string, href?: string) {
+        const a = $(id) as HTMLAnchorElement;
+        if (href) {
+          a.href = href;
+          a.hidden = false;
+        } else {
+          a.hidden = true;
+        }
+      }
+
+      // Re-run the small "swap" animation when the selected project changes
+      function replay(el: HTMLElement) {
+        el.classList.remove("swap");
+        void el.offsetWidth;
+        el.classList.add("swap");
+      }
+
+      function show(btn: HTMLButtonElement) {
+        if (btn.getAttribute("aria-pressed") === "true") return;
+        const d = btn.dataset;
+        buttons.forEach((b) =>
+          b.setAttribute("aria-pressed", String(b === btn)),
+        );
+        $("detail-index").textContent = d.index ?? "";
+        $("detail-title").textContent = d.title ?? "";
+        $("detail-desc").textContent = d.desc ?? "";
+
+        const tags = JSON.parse(d.tags ?? "[]") as string[];
+        $("detail-tags").replaceChildren(
+          ...tags.map((t) => {
+            const li = document.createElement("li");
+            li.textContent = t;
+            return li;
+          }),
+        );
+
+        setLink("detail-github", d.github);
+        setLink("detail-live", d.live);
+
+        if (!reduceMotion.matches) {
+          replay($("detail-index"));
+          replay($("detail-body"));
+        }
+      }
+
+      buttons.forEach((b) => b.addEventListener("click", () => show(b)));
+
+      // Autoplay: the progress bar on the active project ends, the next one starts
+      function setAutoplay(on: boolean) {
+        reel.dataset.autoplay = on ? "on" : "off";
+        toggle.setAttribute("aria-pressed", String(on));
+      }
+
+      toggle.addEventListener("click", () =>
+        setAutoplay(reel.dataset.autoplay !== "on"),
+      );
+
+      reel.addEventListener("animationend", (e) => {
+        if (e.animationName !== "progress") return;
+        const i = buttons.findIndex(
+          (b) => b.getAttribute("aria-pressed") === "true",
+        );
+        show(buttons[(i + 1) % buttons.length]);
+      });
+
+      setAutoplay(!reduceMotion.matches);
+
+      // Pointer parallax for the fog and rings, and a light sheen on the glass panel
+      if (!reduceMotion.matches && window.matchMedia("(pointer: fine)").matches) {
+        let frame = 0;
+        window.addEventListener("pointermove", (e) => {
+          if (frame) return;
+          frame = requestAnimationFrame(() => {
+            frame = 0;
+            stage.style.setProperty(
+              "--px",
+              ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3),
+            );
+            stage.style.setProperty(
+              "--py",
+              ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3),
+            );
+          });
+        });
+
+        intro.addEventListener("pointermove", (e) => {
+          const r = intro.getBoundingClientRect();
+          intro.style.setProperty("--mx", `${e.clientX - r.left}px`);
+          intro.style.setProperty("--my", `${e.clientY - r.top}px`);
+        });
+      }
+
+      // Panels below the stage fade in as they scroll into view
+      if (!reduceMotion.matches && "IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((en) => {
+              if (en.isIntersecting) {
+                en.target.classList.add("in");
+                io.unobserve(en.target);
+              }
+            }),
+          { threshold: 0.15 },
+        );
+        document.querySelectorAll<HTMLElement>(".panel").forEach((el, i) => {
+          el.style.transitionDelay = `${i * 90}ms`;
+          el.classList.add("reveal");
+          io.observe(el);
+        });
+      }
+    </script>
+  </body>
+</html>

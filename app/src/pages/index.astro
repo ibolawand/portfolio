@@ -1,0 +1,996 @@
+---
+// src/pages/ask.astro
+import "../styles/global.css";
+import Navbar from "../components/Navbar.astro"
+
+const developerName = "Lawand Ibo";
+const email = "ibolawand432@gmail.com";
+const githubProfile = "https://github.com/ibolawand";
+const suggestions = [
+  "What does Lawand build?",
+  "Which technologies does he use?",
+  "Tell me about the home lab",
+  "How can I contact him?",
+];
+const initials = developerName
+  .split(" ")
+  .map((part) => part[0])
+  .join("");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content={`Ask an AI about ${developerName}: his work, stack and projects. It runs on a local model at home.`}
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#151b1a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Ask my AI | {developerName}</title>
+  </head>
+  <body>
+    <a href="#chat" class="skip-link">Skip to chat</a>
+    <div id="cursor" class="cursor" aria-hidden="true">
+      <div class="cursor-dot"></div>
+      <div class="cursor-ring"></div>
+    </div>
+
+    <div class="stage">
+      <svg class="ring" viewBox="0 0 800 800" aria-hidden="true">
+        <circle cx="400" cy="400" r="380" pathLength="1"></circle>
+        <circle cx="400" cy="400" r="290"></circle>
+      </svg>
+
+    <Navbar initials={initials} email={email} />
+
+      <main class="stage-main">
+        <section class="intro" aria-label="About this chat">
+          <div>
+            <h1 class="title">
+              <span class="line" style="--d: 0"><span>Ask</span></span>
+              <span class="line" style="--d: 1"><span>my AI</span></span>
+            </h1>
+            <p class="role">A small language model, running at home</p>
+            <p class="bio">
+              Ask about my work, my stack or my projects. It answers from the
+              facts on this site and can still be wrong, so email me for
+              anything important.
+            </p>
+          </div>
+
+          <div class="suggest">
+            <p class="suggest-label">Try asking</p>
+            <ul class="chips">
+              {
+                suggestions.map((q) => (
+                  <li>
+                    <button type="button" class="chip" data-q={q}>
+                      {q}
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </section>
+
+        <section class="reel chat" id="chat" aria-labelledby="chat-title">
+          <header class="reel-head">
+            <h2 id="chat-title">Chat Assistant</h2>
+            <div class="reel-tools">
+              <span id="model-name">–</span>
+              <button type="button" id="clear" class="autoplay">Clear</button>
+            </div>
+          </header>
+
+          <div id="avatar-container" class="avatar-chat-overlay" data-state="idle">
+            <div id="avatar-loading" class="avatar-loading">Initializing 3D Assistant...</div>
+            <span class="avatar-hint" id="avatar-hint" aria-hidden="true">Click me</span>
+          </div>
+
+          <div class="log" id="log" role="log" aria-live="polite" tabindex="0">
+            <p class="msg bot">
+              Hi! I'm a small AI running on Lawand's own machine. Ask me about
+              his work, his stack or his projects.
+            </p>
+          </div>
+
+          <form class="composer" id="form" autocomplete="off">
+            <label class="sr-only" for="input">Your question</label>
+            <textarea
+              id="input"
+              rows="1"
+              maxlength="500"
+              placeholder="Ask about Lawand…"></textarea>
+            <button type="submit" id="send" class="btn-send" disabled>Send</button>
+            <button type="button" id="stop" class="btn-stop" hidden>Stop</button>
+          </form>
+          <p class="fine">
+            Answers are generated locally and may be wrong.{" "}
+            <a href={`mailto:${email}`}>Email Lawand</a> for anything important.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <style is:global>
+      .avatar-chat-overlay {
+        cursor: pointer;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: border-color 0.5s ease, box-shadow 0.5s ease;
+      }
+      .avatar-chat-overlay canvas {
+        display: block;
+        opacity: 0;
+        transition: opacity 0.9s ease;
+      }
+      .avatar-chat-overlay.is-ready canvas {
+        opacity: 1;
+      }
+      .avatar-chat-overlay[data-state="talking"] {
+        border-color: rgba(233, 196, 106, 0.55);
+        box-shadow: 0 0 36px rgba(233, 196, 106, 0.14);
+      }
+      .avatar-chat-overlay[data-state="thinking"] {
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+      .avatar-hint {
+        position: absolute;
+        left: 50%;
+        bottom: 0.6rem;
+        transform: translateX(-50%);
+        padding: 0.2rem 0.8rem;
+        border-radius: 999px;
+        background: rgba(21, 27, 26, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        font-size: 0.78rem;
+        color: var(--muted);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      .avatar-chat-overlay.is-ready .avatar-hint:not(.is-hidden) {
+        opacity: 1;
+      }
+      .avatar-hint.is-hidden {
+        opacity: 0;
+        transform: translate(-50%, 6px);
+      }
+    </style>
+
+    <script>
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+      import { VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
+      import { initCursor } from "../scripts/cursor";
+
+      document.addEventListener("astro:page-load", () => {
+        initCursor();
+      });
+      if (typeof window !== "undefined") {
+        (window as any).THREE = THREE;
+      }
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // ============================================================
+      // MATH HELPERS
+      // ============================================================
+      const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+      const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+      const randSign = () => (Math.random() < 0.5 ? -1 : 1);
+      // Frame-rate independent exponential smoothing
+      const damp = (a: number, b: number, lambda: number, dt: number) =>
+        lerp(a, b, 1 - Math.exp(-lambda * dt));
+      // Smooth zero-mean pseudo-noise, range about -1..1
+      const noise = (t: number, f: number, p: number) =>
+        Math.sin(t * f + p) * Math.cos(t * f * 0.43 + p * 1.9);
+
+      // Critically damped spring (no overshoot, natural ease-in/ease-out)
+      type Spring = { v: number; vel: number };
+      function smoothDamp(s: Spring, to: number, smoothTime: number, dt: number, maxSpeed = Infinity) {
+        smoothTime = Math.max(0.0001, smoothTime);
+        const omega = 2 / smoothTime;
+        const x = omega * dt;
+        const e = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
+        const maxChange = maxSpeed * smoothTime;
+        const change = clamp(s.v - to, -maxChange, maxChange);
+        const adj = s.v - change;
+        const temp = (s.vel + omega * change) * dt;
+        s.vel = (s.vel - omega * temp) * e;
+        let out = adj + (change + temp) * e;
+        if (to - s.v > 0 === out > to) {
+          out = to;
+          s.vel = 0;
+        }
+        s.v = out;
+        return out;
+      }
+
+      // ============================================================
+      // POSE + STATE
+      // ============================================================
+      type Pose = {
+        headYaw: number; headPitch: number; headRoll: number;
+        chestYaw: number; chestPitch: number; chestRoll: number;
+        hipsYaw: number; hipsRoll: number;
+        leftUpperArmZ: number; rightUpperArmZ: number;
+        rightUpperArmX: number; leftUpperArmX: number;
+        rightLowerArmY: number; leftLowerArmY: number;
+        leftUpperLegX: number; rightUpperLegX: number;
+        leftLowerLegX: number; rightLowerLegX: number;
+      };
+
+      const idlePose: Pose = {
+        headYaw: 0, headPitch: 0, headRoll: 0,
+        chestYaw: 0, chestPitch: 0, chestRoll: 0,
+        hipsYaw: 0, hipsRoll: 0,
+        leftUpperArmZ: 1.25, rightUpperArmZ: -1.25,
+        rightUpperArmX: 0, leftUpperArmX: 0,
+        rightLowerArmY: 0.3, leftLowerArmY: -0.3,
+        leftUpperLegX: 0, rightUpperLegX: 0,
+        leftLowerLegX: 0, rightLowerLegX: 0,
+      };
+      const KEYS = Object.keys(idlePose) as (keyof Pose)[];
+
+      // One spring per pose channel (smooth base pose) ...
+      const springs = {} as Record<keyof Pose, Spring>;
+      for (const k of KEYS) springs[k] = { v: idlePose[k], vel: 0 };
+      // ... plus an overlay added AFTER smoothing, for oscillations
+      // (breathing, gait, waving, talking gestures) so they aren't damped away.
+      const ov: Pose = { ...idlePose };
+
+      // Chat / interaction state, written by the chat code, read by the avatar
+      const S = {
+        typing: false,
+        thinking: false,
+        talking: false,
+        hover: false,
+        lastChunkAt: 0,
+      };
+
+      const THINK: Partial<Pose> = {
+        headPitch: 0.22, headRoll: 0.15,
+        rightUpperArmZ: -0.9, rightUpperArmX: 1.1, rightLowerArmY: 1.5,
+      };
+
+      // ---------- Actions ----------
+      type ActionType =
+        | "idle" | "look" | "think" | "wave" | "shrug" | "lookAround"
+        | "weightShift" | "walk" | "nod" | "jump" | "spin" | "bow";
+
+      type Action = {
+        type: ActionType; t: number; dur: number;
+        dir: number; p: number; x: number; forced: boolean;
+      };
+
+      const DURATIONS: Record<ActionType, number> = {
+        idle: 0, look: 2.2, think: 2.6, wave: 2.4, shrug: 1.3, lookAround: 2.6,
+        weightShift: 2.4, walk: 6, nod: 1.1, jump: 1.2, spin: 3, bow: 1.6,
+      };
+
+      const IDLE_TABLE: [ActionType, number][] = [
+        ["look", 3], ["think", 2], ["wave", 2], ["shrug", 2],
+        ["lookAround", 3], ["weightShift", 3], ["walk", 2.5], ["nod", 1],
+      ];
+      const REACTIONS: ActionType[] = ["wave", "jump", "spin", "bow", "nod"];
+
+      const action: Action = { type: "idle", t: 0, dur: 0, dir: 1, p: 0, x: 0, forced: false };
+      let cooldown = 1.5;
+      let lastType: ActionType = "idle";
+      let lastReaction: ActionType | null = null;
+
+      // Root motion state
+      const WALK_LIMIT = 0.7;
+      const xs: Spring = { v: 0, vel: 0 }; // x position
+      const ys: Spring = { v: 0, vel: 0 }; // yaw (facing)
+      let spinOffset = 0;
+      let jumpY = 0;
+      let jumpV = 0;
+      let landKick = 0;
+      let gaitPhase = 0;
+      let currentVRM: any = null;
+      let baseYaw = 0; 
+
+      function startAction(type: ActionType, forced = false) {
+        action.type = type;
+        action.t = 0;
+        action.dur = DURATIONS[type];
+        action.dir = randSign();
+        action.p = rand(-0.2, 0.15);
+        action.forced = forced;
+        lastType = type;
+
+        if (type === "walk") {
+          const dir = xs.v > 0.35 ? -1 : xs.v < -0.35 ? 1 : randSign();
+          action.dir = dir;
+          action.x = clamp(xs.v + dir * rand(0.3, 0.65), -WALK_LIMIT, WALK_LIMIT);
+        }
+        if (type === "jump") jumpV = 2.0;
+        if (type === "spin") spinOffset = action.dir * Math.PI * 2;
+      }
+
+      function endAction() {
+        if (action.type === "spin" && spinOffset !== 0) {
+          ys.v -= spinOffset; // normalise so yaw never accumulates
+          spinOffset = 0;
+        }
+        action.type = "idle";
+        action.forced = false;
+        cooldown = rand(2.5, 5.5);
+      }
+
+      function pickIdle(): ActionType {
+        const pool = IDLE_TABLE.filter(
+          ([t]) => t !== lastType && !(reduceMotion && t === "walk"),
+        );
+        let r = Math.random() * pool.reduce((s, [, w]) => s + w, 0);
+        for (const [t, w] of pool) {
+          if ((r -= w) <= 0) return t;
+        }
+        return "look";
+      }
+
+      // Triggered by clicks and chat events
+      function react(type?: ActionType) {
+        if (!currentVRM) return;
+        if (action.forced && action.t < 0.4) return; // debounce spam clicks
+        const pool = REACTIONS.filter(
+          (r) => r !== lastReaction && !(reduceMotion && (r === "jump" || r === "spin")),
+        );
+        const t = type ?? pool[Math.floor(Math.random() * pool.length)];
+        lastReaction = t;
+        startAction(t, true);
+      }
+
+      function mix(tgt: Pose, key: keyof Pose, to: number, w: number) {
+        tgt[key] = lerp(tgt[key], to, w);
+      }
+
+      function applyActionPose(a: Action, tgt: Pose, o: Pose) {
+        const prog = clamp(a.t / Math.max(a.dur, 0.001), 0, 1);
+        const peak = Math.sin(Math.PI * prog);
+        const env = clamp(Math.min(a.t / 0.3, (a.dur - a.t) / 0.35), 0, 1);
+
+        switch (a.type) {
+          case "look":
+            tgt.headYaw = a.dir * 0.6;
+            tgt.headPitch = a.p;
+            break;
+          case "think":
+            Object.assign(tgt, THINK);
+            tgt.headYaw = a.dir * 0.1;
+            o.headRoll += Math.sin(a.t * 1.2) * 0.02;
+            break;
+          case "wave":
+            Object.assign(tgt, {
+              rightUpperArmZ: -0.3, rightUpperArmX: 0.2, rightLowerArmY: 1.7,
+              headYaw: -0.15, headPitch: -0.05,
+            });
+            o.rightLowerArmY += Math.sin(a.t * 10) * 0.28 * env;
+            o.rightUpperArmZ += Math.sin(a.t * 10 + 0.8) * 0.05 * env;
+            break;
+          case "shrug":
+            mix(tgt, "leftUpperArmZ", 1.0, peak);
+            mix(tgt, "rightUpperArmZ", -1.0, peak);
+            mix(tgt, "leftUpperArmX", 0.15, peak);
+            mix(tgt, "rightUpperArmX", 0.15, peak);
+            tgt.headRoll = a.dir * 0.15 * peak;
+            break;
+          case "lookAround": {
+            const first = a.t < a.dur * 0.5;
+            tgt.headYaw = first ? a.dir * 0.55 : -a.dir * 0.4;
+            tgt.chestYaw = tgt.headYaw * 0.4;
+            break;
+          }
+          case "weightShift":
+            tgt.hipsRoll = a.dir * 0.08 * env;
+            tgt.chestRoll = -a.dir * 0.05 * env;
+            tgt.headRoll = a.dir * 0.04 * env;
+            break;
+          case "nod":
+            o.headPitch += Math.abs(Math.sin(a.t * 7)) * 0.18 * env;
+            break;
+          case "bow":
+            tgt.chestPitch = 0.45 * peak;
+            tgt.headPitch = 0.15 * peak;
+            break;
+          case "jump":
+            tgt.leftUpperArmZ = 0.55;
+            tgt.rightUpperArmZ = -0.55;
+            break;
+          case "spin":
+            tgt.leftUpperArmZ = 1.0;
+            tgt.rightUpperArmZ = -1.0;
+            break;
+          default:
+            break;
+        }
+      }
+
+      function applyChatPose(tgt: Pose) {
+        if (S.talking) {
+          Object.assign(tgt, {
+            headPitch: 0.02, rightUpperArmZ: -0.6, rightUpperArmX: 0.25,
+            rightLowerArmY: 0.8, leftUpperArmZ: 1.15,
+          });
+        } else if (S.thinking) {
+          Object.assign(tgt, THINK, { headYaw: -0.1 });
+        } else if (S.typing) {
+          Object.assign(tgt, { headPitch: 0.14, chestPitch: 0.03 });
+        }
+      }
+
+      // ============================================================
+      // AVATAR
+      // ============================================================
+      // near the top of initAvatar
+
+      function initAvatar() {
+        const container = document.getElementById("avatar-container");
+        if (!container) return;
+        const loadingEl = document.getElementById("avatar-loading");
+        const hint = document.getElementById("avatar-hint");
+
+        const getSize = () => ({
+          w: Math.max(1, container.clientWidth),
+          h: Math.max(1, container.clientHeight),
+        });
+        const { w, h } = getSize();
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(28, w / h, 0.1, 20);
+        camera.position.set(0, 1.3, 2.9);
+        camera.lookAt(0, 1.05, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+        const key = new THREE.DirectionalLight(0xffffff, 1.6);
+        key.position.set(1.5, 2.5, 1.5);
+        scene.add(key);
+        const rim = new THREE.DirectionalLight(0xe9c46a, 0.6);
+        rim.position.set(-2, 1.5, -1.5);
+        scene.add(rim);
+        const fill = new THREE.DirectionalLight(0x94a59d, 0.4);
+        fill.position.set(0, 1, 3);
+        scene.add(fill);
+
+        // Eye target (VRM lookAt follows this)
+        const lookTarget = new THREE.Object3D();
+        lookTarget.position.set(0, 1.35, 2);
+        scene.add(lookTarget);
+
+        // ---------- Load VRM ----------
+        const loader = new GLTFLoader();
+        loader.register((parser) => new VRMLoaderPlugin(parser));
+        loader.load(
+          "/models/viverse_avatar_model_214316.vrm",
+          (gltf) => {
+            const vrm = gltf.userData.vrm;
+            if (!vrm) return;
+
+            VRMUtils.removeUnnecessaryVertices(gltf.scene);
+            VRMUtils.combineSkeletons(gltf.scene);
+            VRMUtils.rotateVRM0(vrm);            // flips VRM 0.x by π, no-op for 1.0
+            baseYaw = vrm.scene.rotation.y;      // capture the base facing ONCE, right after
+
+            scene.add(vrm.scene);
+            vrm.scene.position.set(0, 0, 0);
+            if (vrm.lookAt) vrm.lookAt.target = lookTarget;
+            currentVRM = vrm;
+
+            loadingEl?.remove();
+            container.classList.add("is-ready");
+            setTimeout(() => react("wave"), 900);
+            setTimeout(() => hint?.classList.add("is-hidden"), 9000);
+          },
+          undefined,
+          (error) => {
+            console.error("VRM Load Error:", error);
+            if (loadingEl) loadingEl.textContent = "Assistant offline";
+          },
+        );
+
+
+        // ---------- Pointer interaction ----------
+        const pointer = { x: 0, y: 0, tx: 0, ty: 0, last: 0 };
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            const r = container.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top + r.height * 0.3;
+            pointer.tx = clamp((e.clientX - cx) / (window.innerWidth * 0.45), -1, 1);
+            pointer.ty = clamp(-(e.clientY - cy) / (window.innerHeight * 0.45), -1, 1);
+            pointer.last = performance.now();
+          },
+          { passive: true },
+        );
+        container.addEventListener("pointerenter", () => (S.hover = true));
+        container.addEventListener("pointerleave", () => (S.hover = false));
+        container.addEventListener("pointerdown", () => {
+          hint?.classList.add("is-hidden");
+          react();
+        });
+
+        // ---------- Visibility / resize ----------
+        let visible = true;
+        new IntersectionObserver(([entry]) => (visible = entry.isIntersecting)).observe(container);
+        new ResizeObserver(() => {
+          const s = getSize();
+          camera.aspect = s.w / s.h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(s.w, s.h);
+        }).observe(container);
+
+        // ---------- Per-avatar runtime state ----------
+        const clock = new THREE.Clock();
+        let time = 0;
+        let talkEnv = 0;
+        let gestEnv = 0;
+        let blinkT = -1;
+        let nextBlink = rand(2, 4);
+        let doubleBlink = false;
+        let jitterT = 0;
+        const jitter = { x: 0, y: 0 };
+        const ex = { aa: 0, ih: 0, oh: 0, happy: 0.15 };
+        
+
+
+        function updateAvatar(vrm: any, dt: number) {
+          const hum = vrm.humanoid;
+          const now = performance.now();
+          const chat = S.talking || S.thinking || S.typing;
+          const speed = Math.abs(xs.vel);
+
+          // ---------- Action lifecycle ----------
+          if (chat && !action.forced && action.type !== "idle") endAction();
+          if (action.type === "idle") {
+            cooldown -= dt;
+            if (cooldown <= 0 && !chat) startAction(pickIdle());
+          } else {
+            action.t += dt;
+            let done = false;
+            switch (action.type) {
+              case "walk":
+                done =
+                  (Math.abs(xs.v - action.x) < 0.03 && speed < 0.06) ||
+                  action.t > action.dur;
+                break;
+              case "jump":
+                done = action.t > 0.15 && jumpY <= 0.001 && jumpV === 0;
+                break;
+              case "spin":
+                done = action.t > 0.5 && Math.abs(ys.v - spinOffset) < 0.2;
+                break;
+              default:
+                done = action.t >= action.dur;
+            }
+            if (done) endAction();
+          }
+
+          // ---------- Target pose ----------
+          const tgt: Pose = { ...idlePose };
+          for (const k of KEYS) ov[k] = 0;
+
+          if (action.type !== "idle") applyActionPose(action, tgt, ov);
+          if (chat && !action.forced) applyChatPose(tgt);
+
+          // Look-at: head + chest follow the pointer
+          const lw = S.talking ? 0.4 : S.thinking ? 0.15 : S.typing ? 0.25 : action.type === "walk" ? 0.3 : 1;
+          tgt.headYaw += pointer.x * 0.55 * lw;
+          tgt.headPitch += -pointer.y * 0.3 * lw;
+          tgt.chestYaw += pointer.x * 0.15 * lw;
+
+          // ---------- Overlays ----------
+          // Breathing + idle sway
+          const br = Math.sin(time * 1.7);
+          ov.chestPitch += br * 0.018;
+          ov.headPitch += -br * 0.008 + Math.sin(time * 1.1) * 0.02;
+          ov.headYaw += Math.sin(time * 0.8) * 0.03;
+          ov.leftUpperArmZ += br * 0.012;
+          ov.rightUpperArmZ -= br * 0.012;
+
+          // Talking gestures (smoothly faded in/out)
+          gestEnv = damp(gestEnv, S.talking ? 1 : 0, 3, dt);
+          if (gestEnv > 0.01) {
+            const g = gestEnv;
+            ov.headYaw += noise(time, 2.1, 0) * 0.09 * g;
+            ov.headPitch += noise(time, 2.7, 1) * 0.07 * g;
+            ov.headRoll += noise(time, 1.3, 2) * 0.06 * g;
+            ov.rightUpperArmZ += noise(time, 2.2, 3) * 0.18 * g;
+            ov.rightUpperArmX += noise(time, 1.7, 4) * 0.22 * g;
+            ov.rightLowerArmY += noise(time, 2.9, 5) * 0.25 * g;
+            ov.leftUpperArmZ += noise(time, 1.9, 6) * 0.08 * g;
+            ov.chestYaw += noise(time, 1.1, 7) * 0.05 * g;
+          }
+          if (S.typing && !S.talking) ov.headPitch += Math.sin(time * 5) * 0.012;
+          if (S.thinking) ov.headRoll += Math.sin(time * 0.9) * 0.03;
+
+          // Walking: position eases in/out; gait amplitude follows speed
+          if (action.type === "walk") {
+            smoothDamp(xs, action.x, 0.45, dt, 0.7);
+          } else {
+            xs.vel = damp(xs.vel, 0, 8, dt);
+            xs.v += xs.vel * dt;
+          }
+          xs.v = clamp(xs.v, -WALK_LIMIT, WALK_LIMIT);
+
+          const amp = clamp(Math.abs(xs.vel) / 0.4, 0, 1);
+          if (amp > 0.03) gaitPhase += dt * (4 + 7 * amp);
+          const sp = Math.sin(gaitPhase);
+          const sp2 = Math.sin(gaitPhase + Math.PI);
+          ov.leftUpperLegX += sp * 0.55 * amp;
+          ov.rightUpperLegX += sp2 * 0.55 * amp;
+          ov.leftLowerLegX += Math.max(0, Math.sin(gaitPhase - 0.5)) * 0.7 * amp;
+          ov.rightLowerLegX += Math.max(0, Math.sin(gaitPhase + Math.PI - 0.5)) * 0.7 * amp;
+          ov.rightUpperArmX += sp * 0.3 * amp;
+          ov.leftUpperArmX += sp2 * 0.3 * amp;
+          ov.hipsRoll += sp * 0.04 * amp;
+          ov.hipsYaw += sp * 0.1 * amp;
+          ov.chestYaw -= sp * 0.08 * amp;
+
+          // ---------- Spring the base pose and write bones ----------
+          const smoothTime = S.talking || action.forced ? 0.15 : 0.24;
+          for (const k of KEYS) smoothDamp(springs[k], tgt[k], smoothTime, dt);
+          const val = (k: keyof Pose) => springs[k].v + ov[k];
+
+          const node = (n: string) => hum.getNormalizedBoneNode(n);
+          const head = node("head");
+          const chest = node("chest");
+          const hips = node("hips");
+          const lUA = node("leftUpperArm");
+          const rUA = node("rightUpperArm");
+          const lLA = node("leftLowerArm");
+          const rLA = node("rightLowerArm");
+          const lUL = node("leftUpperLeg");
+          const rUL = node("rightUpperLeg");
+          const lLL = node("leftLowerLeg");
+          const rLL = node("rightLowerLeg");
+
+          if (head) {
+            head.rotation.set(val("headPitch"), val("headYaw"), val("headRoll"));
+          }
+          if (chest) {
+            chest.rotation.set(val("chestPitch"), val("chestYaw"), val("chestRoll"));
+          }
+          if (hips) {
+            hips.rotation.y = val("hipsYaw");
+            hips.rotation.z = val("hipsRoll");
+          }
+          if (lUA) { lUA.rotation.z = val("leftUpperArmZ"); lUA.rotation.x = val("leftUpperArmX"); }
+          if (rUA) { rUA.rotation.z = val("rightUpperArmZ"); rUA.rotation.x = val("rightUpperArmX"); }
+          if (lLA) lLA.rotation.y = val("leftLowerArmY");
+          if (rLA) rLA.rotation.y = val("rightLowerArmY");
+          if (lUL) lUL.rotation.x = val("leftUpperLegX");
+          if (rUL) rUL.rotation.x = val("rightUpperLegX");
+          if (lLL) lLL.rotation.x = val("leftLowerLegX");
+          if (rLL) rLL.rotation.x = val("rightLowerLegX");
+
+          // ---------- Root: facing, jump, bob, landing squash ----------
+          const walking = action.type === "walk" && Math.abs(xs.vel) > 0.05;
+          const facing = walking
+            ? Math.sign(xs.vel) * 0.95
+            : pointer.x * (S.talking ? 0.1 : 0.22);
+          smoothDamp(ys, facing + spinOffset, spinOffset !== 0 ? 0.3 : 0.22, dt);
+
+          if (jumpY > 0 || jumpV !== 0) {
+            jumpV -= 8 * dt;
+            jumpY += jumpV * dt;
+            if (jumpY <= 0) {
+              jumpY = 0;
+              jumpV = 0;
+              landKick = 1;
+            }
+          }
+          landKick = damp(landKick, 0, 9, dt);
+          const bob = Math.abs(Math.sin(gaitPhase)) * 0.022 * amp;
+
+          vrm.scene.position.set(xs.v, jumpY + bob, 0);
+          vrm.scene.rotation.y = ys.v+baseYaw ;
+          vrm.scene.scale.set(1 + 0.015 * landKick, 1 - 0.035 * landKick, 1 + 0.015 * landKick);
+
+          // ---------- Eyes ----------
+          jitterT -= dt;
+          if (jitterT <= 0) {
+            jitterT = rand(0.8, 2.5);
+            jitter.x = rand(-0.08, 0.08);
+            jitter.y = rand(-0.05, 0.05);
+          }
+          let gx = pointer.x * 1.2;
+          let gy = 1.35 + pointer.y * 0.5;
+          if (S.thinking) { gx = -0.5; gy = 1.75; }
+          else if (S.typing) { gx = 0; gy = 0.95; }
+          else if (S.hover) { gx = 0; gy = 1.4; }
+          lookTarget.position.x = damp(lookTarget.position.x, gx + xs.v + jitter.x, 10, dt);
+          lookTarget.position.y = damp(lookTarget.position.y, gy + jitter.y, 10, dt);
+          lookTarget.position.z = 2;
+
+          // ---------- Blinking (with occasional double blink) ----------
+          const em = vrm.expressionManager;
+          nextBlink -= dt;
+          if (blinkT < 0 && nextBlink <= 0) {
+            blinkT = 0;
+            doubleBlink = Math.random() < 0.2;
+          }
+          let blinkVal = 0;
+          if (blinkT >= 0) {
+            blinkT += dt;
+            const p = blinkT / 0.16;
+            blinkVal = p < 1 ? Math.sin(p * Math.PI) : 0;
+            if (p >= 1) {
+              blinkT = -1;
+              if (doubleBlink) { nextBlink = 0.12; doubleBlink = false; }
+              else nextBlink = rand(2.5, 5.5);
+            }
+          }
+          em?.setValue("blink", blinkVal);
+
+          // ---------- Lip sync + mood ----------
+          const chunkFresh = now - S.lastChunkAt < 350;
+          talkEnv = damp(talkEnv, S.talking ? (chunkFresh ? 1 : 0.2) : 0, 12, dt);
+          const m1 = Math.abs(Math.sin(time * 11.3)) * (0.6 + 0.4 * Math.sin(time * 3.1));
+          ex.aa = damp(ex.aa, talkEnv * 0.65 * m1, 22, dt);
+          ex.ih = damp(ex.ih, talkEnv * 0.3 * Math.abs(Math.cos(time * 8.7)), 22, dt);
+          ex.oh = damp(ex.oh, talkEnv * 0.25 * Math.abs(Math.sin(time * 5.9 + 1)), 22, dt);
+          const excited =
+            action.type === "wave" || action.type === "jump" || action.type === "spin" || S.hover;
+          const happyT = S.talking
+            ? 0.45
+            : excited
+              ? 0.75
+              : S.thinking
+                ? 0.02
+                : 0.15 + Math.sin(time * 0.7) * 0.05;
+          ex.happy = damp(ex.happy, happyT, 6, dt);
+          em?.setValue("aa", ex.aa);
+          em?.setValue("ih", ex.ih);
+          em?.setValue("oh", ex.oh);
+          em?.setValue("happy", ex.happy);
+
+          // Subtle glow state on the frame
+          const ds = S.talking ? "talking" : S.thinking ? "thinking" : "idle";
+          if (container!.dataset.state !== ds) container!.dataset.state = ds;
+
+          vrm.update(dt);
+        }
+
+        function frame() {
+          requestAnimationFrame(frame);
+          const dt = Math.min(clock.getDelta(), 1 / 30);
+          if (document.hidden || !visible) return;
+          time += dt;
+
+          // Pointer smoothing; gaze returns to centre after 5s of no movement
+          if (performance.now() - pointer.last > 5000) {
+            pointer.tx = 0;
+            pointer.ty = 0;
+          }
+          pointer.x = damp(pointer.x, pointer.tx, 5, dt);
+          pointer.y = damp(pointer.y, pointer.ty, 5, dt);
+
+          // Gentle camera parallax
+          camera.position.x = damp(camera.position.x, pointer.x * 0.12, 3, dt);
+          camera.position.y = damp(camera.position.y, 1.3 + pointer.y * 0.05, 3, dt);
+          camera.lookAt(0, 1.05, 0);
+
+          if (currentVRM?.humanoid) updateAvatar(currentVRM, dt);
+          renderer.render(scene, camera);
+        }
+        frame();
+      }
+
+      if (document.readyState === "complete") initAvatar();
+      else window.addEventListener("load", initAvatar);
+
+      // ============================================================
+      // CHAT LOGIC
+      // ============================================================
+      type Msg = { role: "user" | "assistant"; content: string };
+
+      const $ = (id: string) => document.getElementById(id)!;
+      const log = $("log");
+      const form = $("form") as HTMLFormElement;
+      const input = $("input") as HTMLTextAreaElement;
+      const send = $("send") as HTMLButtonElement;
+      const stop = $("stop") as HTMLButtonElement;
+      const statusEl = $("ai-status");
+      const modelEl = $("model-name");
+      const greeting = log.innerHTML;
+
+      let history: Msg[] = [];
+      let controller: AbortController | null = null;
+      let online = false;
+      let busy = false;
+      let typingTimer: number | undefined;
+
+      function addMsg(kind: "user" | "bot" | "error", text = "") {
+        const p = document.createElement("p");
+        p.className = `msg ${kind}`;
+        p.textContent = text;
+        log.append(p);
+        log.scrollTop = log.scrollHeight;
+        return p;
+      }
+
+      function refresh() {
+        send.disabled = !online || busy;
+        send.hidden = busy;
+        stop.hidden = !busy;
+        input.placeholder = online
+          ? "Ask about Lawand…"
+          : "The AI is asleep right now. Email me instead.";
+      }
+
+      function setOnline(on: boolean, model?: string) {
+        online = on;
+        statusEl.dataset.state = on ? "online" : "offline";
+        statusEl.textContent = on ? "AI online" : "AI offline";
+        modelEl.textContent = on && model ? model : "–";
+        refresh();
+      }
+
+      async function checkHealth() {
+        try {
+          const r = await fetch("/api/health", {
+            cache: "no-store",
+            signal: AbortSignal.timeout(3000),
+          });
+          const d = await r.json();
+          setOnline(Boolean(d.online), d.model);
+        } catch {
+          setOnline(false);
+        }
+      }
+
+      async function ask(text: string) {
+        if (busy || !online) return;
+        busy = true;
+        refresh();
+
+        addMsg("user", text);
+        history.push({ role: "user", content: text });
+        const bot = addMsg("bot");
+        bot.classList.add("thinking");
+
+        // Avatar: stop typing-listen pose, start thinking
+        clearTimeout(typingTimer);
+        S.typing = false;
+        S.thinking = true;
+
+        controller = new AbortController();
+        let answer = "";
+        let failed = false;
+        try {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: history }),
+            signal: controller.signal,
+          });
+          if (!res.ok || !res.body) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error ?? "Something went wrong. Please try again.");
+          }
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+
+          for (;;) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            // First chunk: thinking turns into talking
+            if (S.thinking) {
+              S.thinking = false;
+              S.talking = true;
+            }
+            S.lastChunkAt = performance.now();
+            answer += decoder.decode(value, { stream: true });
+            bot.textContent = answer;
+            bot.classList.remove("thinking");
+            bot.classList.add("streaming");
+            log.scrollTop = log.scrollHeight;
+          }
+          answer += decoder.decode();
+          bot.textContent = answer;
+          if (!answer.trim()) throw new Error("The model returned nothing. Please try again.");
+          history.push({ role: "assistant", content: answer });
+        } catch (err) {
+          if ((err as DOMException).name === "AbortError") {
+            if (answer.trim()) history.push({ role: "assistant", content: answer });
+            else {
+              bot.remove();
+              history.pop();
+            }
+          } else {
+            failed = true;
+            bot.remove();
+            history.pop();
+            addMsg("error", (err as Error).message);
+            checkHealth();
+          }
+        } finally {
+          S.thinking = false;
+          S.talking = false;
+          bot.classList.remove("thinking", "streaming");
+          controller = null;
+          busy = false;
+          refresh();
+          input.focus();
+          // Small reaction when done: nod on success, shrug on error
+          if (failed) react("shrug");
+          else if (answer.trim()) react("nod");
+        }
+      }
+
+      function autosize() {
+        input.style.height = "auto";
+        input.style.height = `${Math.min(input.scrollHeight, 128)}px`;
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = "";
+        autosize();
+        ask(text);
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          form.requestSubmit();
+        }
+      });
+      input.addEventListener("input", () => {
+        autosize();
+        // Avatar "listens" while the user types
+        S.typing = input.value.length > 0 && !busy;
+        clearTimeout(typingTimer);
+        typingTimer = window.setTimeout(() => (S.typing = false), 1800);
+      });
+      input.addEventListener("blur", () => {
+        S.typing = false;
+      });
+
+      stop.addEventListener("click", () => controller?.abort());
+
+      document.querySelectorAll<HTMLButtonElement>(".chip").forEach((chip) =>
+        chip.addEventListener("click", () => ask(chip.dataset.q ?? "")),
+      );
+
+      $("clear").addEventListener("click", () => {
+        controller?.abort();
+        history = [];
+        log.innerHTML = greeting;
+        input.focus();
+        react("wave");
+      });
+
+      // Health check immediately + every 45 seconds
+      checkHealth();
+      setInterval(() => !busy && checkHealth(), 45_000);
+    </script>
+  </body>
+</html>

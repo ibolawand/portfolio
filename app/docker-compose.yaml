@@ -1,0 +1,46 @@
+services:
+  portfolio:
+    build: .
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - chat-api
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file:
+      - .env
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - portfolio
+  chat-api:
+    build: ./api
+    container_name: chat-api
+    restart: unless-stopped
+    environment:
+      # Ollama running on the host machine:
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=qwen2.5:7b
+      # Optional limits (defaults shown):
+      # - RATE_LIMIT=12        # questions per visitor ...
+      # - RATE_WINDOW_MIN=10   # ... per this many minutes
+      # - MAX_CONCURRENT=2     # answers generated at the same time
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+# Also add to the "portfolio" service so nginx starts after the API exists:
+#   depends_on:
+#     - chat-api

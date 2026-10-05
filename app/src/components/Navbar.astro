@@ -1,0 +1,49 @@
+---
+// src/components/Navbar.astro
+interface Props {
+  initials: string;
+  email: string;
+}
+
+const { initials, email } = Astro.props;
+
+// Strip trailing slashes to accurately match "/" or "/overview"
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isOverview = currentPath === "/overview";
+---
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">{initials}</span>
+    <span class="pill status">Open to new projects</span>
+  </div>
+
+  <nav class="pills" aria-label="Primary">
+    {
+      isOverview ? (
+        <>
+          {/* Shown ONLY on /overview */}
+          <a class="pill" href="/">Ask AI</a>
+          <a class="pill" href="#projects">Projects</a>
+          <a class="pill" href="#stack">Stack</a>
+          <a class="pill" href={`mailto:${email}`}>Contact</a>
+        </>
+      ) : (
+        <>
+          {/* Shown ONLY on the root / home page */}
+          <a class="pill pill-accent" href="/overview">Overview</a>
+        </>
+         <div class="pills">
+    <span
+      class="pill status ai-status"
+      id="ai-status"
+      data-state="checking"
+      role="status">Checking AI…</span
+    >
+  </div>
+      )
+    }
+  </nav>
+
+ 
+</header>
