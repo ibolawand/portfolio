@@ -1,68 +1,81 @@
 ---
 // src/pages/index.astro
-import "../styles/global.css";
-import Navbar from "../components/Navbar.astro"
+import "../styles/home.css";
 
 interface Project {
   title: string;
-  description: string;
+  blurb: string;
   tags: string[];
+  status: "live" | "building" | "planned";
   link?: string;
   github?: string;
+  image?: string; // optional screenshot, e.g. "/projects/lifequest.png"
 }
 
-interface SkillGroup {
-  label: string;
-  items: string[];
-}
-
-const developerName = "Lawand Ibo";
-const role = "Software Engineer & Systems Developer student at the htbla Leonding";
-const bio =
-  "I build performant full-stack applications and systems software, with a focus on clean architecture and reliable infrastructure.";
+// ---------- Edit everything about you here ----------
+const name = "Lawand Ibo";
+const [first, last] = name.split(" ");
+const role = "Software Engineer & Systems Developer";
+const intro =
+  "I build things that talk to each other: web apps, backends, and small AI tools that run on my own hardware.";
 const email = "ibolawand432@gmail.com";
-const githubProfile = "https://github.com/ibolawand";
-
-
-const skillGroups: SkillGroup[] = [
-  { label: "Languages", items: ["TypeScript", "Java", "c#","c++","python"] },
-  { label: "Frameworks", items: ["Angular", "Tailwind CSS","React"] },
-  { label: "Infrastructure", items: ["Docker", "PostgreSQL", "Linux"] },
-];
+const github = "https://github.com/ibolawand";
+const heroPhoto = ""; // e.g. "/hero.jpg"; leave empty to show the drawn landscape
 
 const projects: Project[] = [
   {
-    title: "Portfolio",
-    description:
-      "Self-hosted portfolio and services running in Docker and served securely through a Cloudflare Tunnel.",
+    title: "LifeQuest Tracker",
+    blurb: "A quest-based productivity tracker with an AI assistant, a calendar and an XP system.",
+    tags: ["Angular", "TypeScript", "Node.js", "SQLite"],
+    status: "building",
+  },
+  {
+    title: "Aria, my voice assistant",
+    blurb: "A local AI assistant with speech recognition, text-to-speech, app control and system integration.",
+    tags: ["Python", "Ollama", "Whisper", "PyAudio"],
+    status: "building",
+  },
+  {
+    title: "Robot",
+    blurb: "A small robot built from Arduino, ESP32 and 3D-printed parts.",
+    tags: ["Arduino", "C++", "3D printing", "Electronics"],
+    status: "building",
+  },
+  {
+    title: "This website",
+    blurb: "Self-hosted at home in Docker and served through a Cloudflare Tunnel.",
     tags: ["Astro", "TypeScript", "Docker", "Cloudflare"],
-    github: "https://github.com/ibolawand/portfolio",
-  },
-  {
-    title: "MyNotion",
-    description:
-      "Full-stack application ,simple overview over everything, and a modular backend.",
-    tags: ["TypeScript", "Angular", "PostgreSQL","Electron"],
-    github: "https://github.com/ibolawand/MyNotion",
-  },
-  {
-    title: "AI assistant & overlay pipeline",
-    description:
-      "Desktop assistant with a custom GUI overlay, real-time speech processing, and local LLM integration.",
-    tags: ["Python","Local LLMs"],
-    github: "https://github.com/ibolawand/personal-ai",
+    status: "live",
   },
 ];
 
-const [firstName, ...restName] = developerName.split(" ");
-const lastName = restName.join(" ");
-const initials = developerName
-  .split(" ")
-  .map((part) => part[0])
-  .join("");
-const pad = (n: number) => String(n).padStart(2, "0");
-const first = projects[0];
-const description = `${developerName} – ${role}. ${bio}`;
+const statusLabel = { live: "Live", building: "In progress", planned: "Planned" } as const;
+
+const skills = [
+  { label: "Frontend", items: ["Angular", "TypeScript", "HTML", "CSS"] },
+  { label: "Backend", items: ["Node.js", "Express", "Java", "C#"] },
+  { label: "Databases", items: ["SQLite", "PostgreSQL", "MySQL"] },
+  { label: "Tools", items: ["Docker", "Git", "Linux", "VS Code"] },
+  { label: "Also", items: ["C++", "Rust", "Arduino", "3D printing"] },
+];
+
+// A few stars with a fixed pseudo-random layout (same on every build)
+const stars = Array.from({ length: 46 }, (_, i) => {
+  const r = (n: number) => {
+    const x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  return { x: Math.round(r(1) * 1000), y: Math.round(r(2) * 260), s: 0.6 + r(3) * 1.3, tw: i % 4 === 0, d: (r(4) * 6).toFixed(1) };
+});
+const valleyLights = Array.from({ length: 34 }, (_, i) => {
+  const r = (n: number) => {
+    const x = Math.sin(i * 39.346 + n * 11.135) * 24634.6345;
+    return x - Math.floor(x);
+  };
+  return { x: Math.round(60 + r(1) * 560), y: Math.round(392 + r(2) * 26), o: (0.45 + r(3) * 0.55).toFixed(2), warm: r(4) > 0.35, d: (r(5) * 5).toFixed(1) };
+});
+
+const description = `${name}: ${role}. ${intro}`;
 ---
 
 <!doctype html>
@@ -74,286 +87,197 @@ const description = `${developerName} – ${role}. ${bio}`;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#151b1a" />
-    <meta property="og:title" content={`${developerName} | ${role}`} />
+    <meta name="theme-color" content="#0b1017" />
+    <meta property="og:title" content={`${name} | ${role}`} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Sora:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
-    <title>{developerName} | {role}</title>
+    <title>{name} | {role}</title>
   </head>
   <body>
-    <a href="#work" class="skip-link">Skip to projects</a>
-    <div id="cursor" class="cursor" aria-hidden="true">
-        <div class="cursor-dot"></div>
-        <div class="cursor-ring"></div>
-    </div>
+    <a href="#projects" class="skip-link">Skip to projects</a>
 
-    <div class="stage">
-      <svg class="ring" viewBox="0 0 800 800" aria-hidden="true">
-        <circle cx="400" cy="400" r="380" pathLength="1"></circle>
-        <circle cx="400" cy="400" r="290"></circle>
-      </svg>
+    <header class="top">
+      <div class="wrap top-inner">
+        <a class="logo" href="#top" aria-label={`${name}, home`}>
+          <span class="logo-mark" aria-hidden="true">L</span>
+          <span class="logo-name">{name}</span>
+        </a>
+        <nav aria-label="Primary" class="nav">
+          <a href="#top" aria-current="page">Home</a>
+          <a href="#projects">Projects</a>
+          <a href="#stack">Stack</a>
+          <a href="#contact">Contact</a>
+          <a href="/ask" class="nav-ask">Ask Aria</a>
+        </nav>
+      </div>
+    </header>
 
-      <Navbar initials={initials} email={email} />
-
-      <main class="stage-main">
-        <section class="intro" aria-label="About">
-          <div>
-            <h1 class="title">
-              <span class="line" style="--d: 0"><span>{firstName}</span></span>
-              <span class="line" style="--d: 1"><span>{lastName}</span></span>
-            </h1>
-            <p class="role">{role}</p>
-            <p class="bio">{bio}</p>
-          </div>
-
-          <div class="detail" aria-live="polite">
-            <p class="detail-index" id="detail-index">01</p>
-            <div class="detail-body" id="detail-body">
-              <h3 id="detail-title">{first.title}</h3>
-              <p class="detail-desc" id="detail-desc">{first.description}</p>
-              <ul class="tags" id="detail-tags" aria-label="Technologies used">
-                {first.tags.map((tag) => <li>{tag}</li>)}
-              </ul>
-              <p class="detail-links">
-                <a
-                  id="detail-github"
-                  href={first.github ?? "#"}
-                  hidden={!first.github}
-                  target="_blank"
-                  rel="noopener noreferrer">Source code</a
-                >
-                <a
-                  id="detail-live"
-                  href={first.link ?? "#"}
-                  hidden={!first.link}
-                  target="_blank"
-                  rel="noopener noreferrer">Live demo</a
-                >
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section
-          class="reel"
-          id="work"
-          aria-labelledby="work-title"
-          data-autoplay="off"
-        >
-          <header class="reel-head">
-            <h2 id="work-title">Projects</h2>
-            <div class="reel-tools">
-              <span>{projects.length} selected</span>
-              <button
-                type="button"
-                id="autoplay"
-                class="autoplay"
-                aria-pressed="false"
-              >
-                Autoplay
-              </button>
-            </div>
-          </header>
-          <ul class="episodes">
-            {
-              projects.map((p, i) => (
-                <li>
-                  <button
-                    type="button"
-                    class="episode"
-                    aria-pressed={i === 0 ? "true" : "false"}
-                    data-index={pad(i + 1)}
-                    data-title={p.title}
-                    data-desc={p.description}
-                    data-tags={JSON.stringify(p.tags)}
-                    data-github={p.github ?? ""}
-                    data-live={p.link ?? ""}
-                  >
-                    <span class="thumb" aria-hidden="true">
-                      {p.tags[0]}
-                    </span>
-                    <span class="ep-text">
-                      <span class="ep-num">{pad(i + 1)}</span>
-                      <strong>{p.title}</strong>
-                      <span class="ep-desc">{p.description}</span>
-                    </span>
-                  </button>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-      </main>
-    </div>
-
-    <div class="below">
-      <section id="stack" class="panel" aria-labelledby="stack-title">
-        <h2 id="stack-title">Technical stack</h2>
-        <div class="stack-groups">
+    <main class="wrap grid" id="top">
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="scene" aria-hidden="true">
           {
-            skillGroups.map((group) => (
-              <div class="stack-group">
-                <h3>{group.label}</h3>
-                <ul>
-                  {group.items.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
+            heroPhoto ? (
+              <img class="photo" src={heroPhoto} alt="" />
+            ) : (
+              <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#080d1b" />
+                    <stop offset="0.42" stop-color="#171d3a" />
+                    <stop offset="0.72" stop-color="#4b3a5e" />
+                    <stop offset="0.9" stop-color="#b9694f" />
+                    <stop offset="1" stop-color="#e09a62" />
+                  </linearGradient>
+                  <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#9c5a52" stop-opacity="0.35" />
+                    <stop offset="1" stop-color="#1b2040" stop-opacity="0.9" />
+                  </linearGradient>
+                  <filter id="soften" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="7" /></filter>
+                  <radialGradient id="glow" cx="0.5" cy="1" r="0.7">
+                    <stop offset="0" stop-color="#f2a65a" stop-opacity="0.45" />
+                    <stop offset="1" stop-color="#f2a65a" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <rect width="1000" height="560" fill="url(#sky)" />
+                <rect width="1000" height="560" fill="url(#glow)" />
+                {stars.map((s) => (
+                  <circle cx={s.x} cy={s.y} r={s.s} fill="#f5f1e6" class={s.tw ? "star twinkle" : "star"} style={`animation-delay:${s.d}s`} />
+                ))}
+                <!-- far ridge -->
+                <path d="M0 360 L70 318 L130 340 L210 270 L270 312 L340 250 L420 318 L480 292 L560 340 L640 276 L720 322 L800 262 L880 318 L950 288 L1000 312 L1000 560 L0 560 Z" fill="#3a3560" />
+                <!-- middle ridge -->
+                <path d="M0 400 L90 352 L170 384 L250 330 L330 378 L400 346 L470 392 L560 350 L640 398 L720 364 L800 402 L900 366 L1000 392 L1000 560 L0 560 Z" fill="#232748" />
+                <!-- lake -->
+                <path d="M150 436 C280 426 430 428 590 438 L590 468 C430 476 280 474 150 468 Z" fill="url(#lake)" filter="url(#soften)" />
+                <!-- lights down in the valley -->
+                {valleyLights.map((l) => (
+                  <circle cx={l.x} cy={l.y} r="2.1" fill={l.warm ? "#ffd596" : "#a9c7ff"} opacity={l.o} class="light" style={`animation-delay:${l.d}s`} />
+                ))}
+                <!-- near slope and rock -->
+                <path d="M0 470 L120 448 L260 462 L420 440 L560 458 L700 420 L760 410 L1000 400 L1000 560 L0 560 Z" fill="#12152b" />
+                <path d="M640 560 L664 470 L700 420 L758 392 L842 384 L920 396 L1000 380 L1000 560 Z" fill="#090b18" />
+                <!-- someone sitting on the rock, looking at the lights -->
+                <g fill="#04050c" transform="translate(-280 -140.7) scale(1.35)">
+                  <circle cx="806" cy="338" r="13" />
+                  <path d="M792 352 C788 372 790 392 798 402 L826 402 C832 384 830 364 822 352 Z" />
+                  <path d="M826 358 C846 362 852 384 842 398 L826 396 Z" />
+                  <path d="M798 398 L760 404 C750 406 746 392 756 390 L800 384 Z" />
+                  <path d="M812 400 L770 408 C760 410 758 396 768 394 L816 388 Z" />
+                  <path d="M792 360 L780 384 L792 388 Z" />
+                </g>
+              </svg>
+            )
           }
+        </div>
+
+        <div class="hero-copy">
+          <p class="hi">Hi, I'm</p>
+          <h1 id="hero-title" class="name">
+            <span>{first}</span> <span class="accent">{last}</span>
+          </h1>
+          <p class="role">{role}</p>
+          <p class="intro">{intro}</p>
+          <p class="cta">
+            <a class="btn btn-primary" href="#projects">See what I'm building</a>
+            <a class="btn btn-ghost" href={`mailto:${email}`}>Say hi</a>
+          </p>
         </div>
       </section>
 
-      <section id="contact" class="panel" aria-labelledby="contact-title">
-        <h2 id="contact-title">Have a project in mind?</h2>
-        <a class="mail" href={`mailto:${email}`}>{email}</a>
-        <p class="contact-extra">
-          Or browse the code on{" "}
-          <a href={githubProfile} target="_blank" rel="noopener noreferrer"
-            >GitHub</a
-          >.
+      <!-- Projects -->
+      <section class="panel projects" id="projects" aria-labelledby="projects-title">
+        <div class="panel-head">
+          <h2 id="projects-title">What I'm working on</h2>
+          <svg class="squiggle" viewBox="0 0 120 10" aria-hidden="true"><path d="M2 6 C 14 1, 22 9, 34 5 S 56 2, 68 6 S 92 9, 118 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+        </div>
+        <ul class="project-list">
+          {
+            projects.map((p) => (
+              <li class="project">
+                {p.image && <img class="project-img" src={p.image} alt="" loading="lazy" />}
+                <div class="project-body">
+                  <div class="project-top">
+                    <h3>{p.title}</h3>
+                    <span class={`status ${p.status}`}>{statusLabel[p.status]}</span>
+                  </div>
+                  <p>{p.blurb}</p>
+                  <p class="tags">{p.tags.join(" · ")}</p>
+                  {(p.github || p.link) && (
+                    <p class="project-links">
+                      {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer">Code</a>}
+                      {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer">Open</a>}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <aside class="note" aria-label="What I'm up to right now">
+          <p class="note-title">Right now</p>
+          <ul>
+            <li>building Aria</li>
+            <li>learning Chinese</li>
+            <li>fixing this site (again)</li>
+          </ul>
+        </aside>
+        <div class="ask-mini">
+          <h3>Rather ask than read?</h3>
+          <p>
+            Aria is a small AI that runs on my own computer at home. She knows what's on this page and can answer
+            questions about me.
+          </p>
+          <p><a class="btn btn-primary" href="/ask">Ask Aria</a></p>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="panel about" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About me</h2>
+        <p>
+          I'm a software engineering student in Austria. I like finding out how things work, whether that's a
+          backend, a physics problem or a small robot.
+        </p>
+        <p>
+          Outside of code: piano, physics and maths, anime and games, and I'm slowly learning Chinese.
+        </p>
+        <p class="hand" aria-label="Progress over perfection">Progress over perfection.</p>
+      </section>
+
+      <!-- Stack -->
+      <section class="panel stack" id="stack" aria-labelledby="stack-title">
+        <h2 id="stack-title">What I use</h2>
+        <dl class="skills">
+          {
+            skills.map((g) => (
+              <div class="skill-row">
+                <dt>{g.label}</dt>
+                <dd>{g.items.join(" · ")}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <!-- Contact -->
+      <section class="panel contact" id="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">Want to build something, or just say hi?</h2>
+        <p class="contact-links">
+          <a class="mail" href={`mailto:${email}`}>{email}</a>
+          <a href={github} target="_blank" rel="noopener noreferrer">GitHub</a>
         </p>
       </section>
-    </div>
+    </main>
 
-    <footer class="footer">
-      <p>
-        &copy; {new Date().getFullYear()}{" "}
-        {developerName}. Built with Astro, served from a Docker container.
-      </p>
+    <footer class="wrap footer">
+      <p>&copy; {new Date().getFullYear()} {name}. Built with Astro, hosted on a machine at home.</p>
     </footer>
-
-    <script>
-        document.addEventListener("astro:page-load", () => {
-    initCursor();
-  });
-      const buttons = Array.from(
-        document.querySelectorAll<HTMLButtonElement>(".episode"),
-      );
-      const $ = (id: string) => document.getElementById(id)!;
-      const stage = document.querySelector<HTMLElement>(".stage")!;
-      const intro = document.querySelector<HTMLElement>(".intro")!;
-      const reel = document.querySelector<HTMLElement>(".reel")!;
-      const toggle = $("autoplay") as HTMLButtonElement;
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-      function setLink(id: string, href?: string) {
-        const a = $(id) as HTMLAnchorElement;
-        if (href) {
-          a.href = href;
-          a.hidden = false;
-        } else {
-          a.hidden = true;
-        }
-      }
-
-      // Re-run the small "swap" animation when the selected project changes
-      function replay(el: HTMLElement) {
-        el.classList.remove("swap");
-        void el.offsetWidth;
-        el.classList.add("swap");
-      }
-
-      function show(btn: HTMLButtonElement) {
-        if (btn.getAttribute("aria-pressed") === "true") return;
-        const d = btn.dataset;
-        buttons.forEach((b) =>
-          b.setAttribute("aria-pressed", String(b === btn)),
-        );
-        $("detail-index").textContent = d.index ?? "";
-        $("detail-title").textContent = d.title ?? "";
-        $("detail-desc").textContent = d.desc ?? "";
-
-        const tags = JSON.parse(d.tags ?? "[]") as string[];
-        $("detail-tags").replaceChildren(
-          ...tags.map((t) => {
-            const li = document.createElement("li");
-            li.textContent = t;
-            return li;
-          }),
-        );
-
-        setLink("detail-github", d.github);
-        setLink("detail-live", d.live);
-
-        if (!reduceMotion.matches) {
-          replay($("detail-index"));
-          replay($("detail-body"));
-        }
-      }
-
-      buttons.forEach((b) => b.addEventListener("click", () => show(b)));
-
-      // Autoplay: the progress bar on the active project ends, the next one starts
-      function setAutoplay(on: boolean) {
-        reel.dataset.autoplay = on ? "on" : "off";
-        toggle.setAttribute("aria-pressed", String(on));
-      }
-
-      toggle.addEventListener("click", () =>
-        setAutoplay(reel.dataset.autoplay !== "on"),
-      );
-
-      reel.addEventListener("animationend", (e) => {
-        if (e.animationName !== "progress") return;
-        const i = buttons.findIndex(
-          (b) => b.getAttribute("aria-pressed") === "true",
-        );
-        show(buttons[(i + 1) % buttons.length]);
-      });
-
-      setAutoplay(!reduceMotion.matches);
-
-      // Pointer parallax for the fog and rings, and a light sheen on the glass panel
-      if (!reduceMotion.matches && window.matchMedia("(pointer: fine)").matches) {
-        let frame = 0;
-        window.addEventListener("pointermove", (e) => {
-          if (frame) return;
-          frame = requestAnimationFrame(() => {
-            frame = 0;
-            stage.style.setProperty(
-              "--px",
-              ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3),
-            );
-            stage.style.setProperty(
-              "--py",
-              ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3),
-            );
-          });
-        });
-
-        intro.addEventListener("pointermove", (e) => {
-          const r = intro.getBoundingClientRect();
-          intro.style.setProperty("--mx", `${e.clientX - r.left}px`);
-          intro.style.setProperty("--my", `${e.clientY - r.top}px`);
-        });
-      }
-
-      // Panels below the stage fade in as they scroll into view
-      if (!reduceMotion.matches && "IntersectionObserver" in window) {
-        const io = new IntersectionObserver(
-          (entries) =>
-            entries.forEach((en) => {
-              if (en.isIntersecting) {
-                en.target.classList.add("in");
-                io.unobserve(en.target);
-              }
-            }),
-          { threshold: 0.15 },
-        );
-        document.querySelectorAll<HTMLElement>(".panel").forEach((el, i) => {
-          el.style.transitionDelay = `${i * 90}ms`;
-          el.classList.add("reveal");
-          io.observe(el);
-        });
-      }
-    </script>
   </body>
 </html>
