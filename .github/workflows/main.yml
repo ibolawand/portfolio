@@ -9,6 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug host value
+        run: echo "Host is set to [${{ secrets.SERVER_HOST }}]"
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
