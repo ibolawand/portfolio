@@ -1,5 +1,5 @@
 ---
-// src/pages/index.astro
+// src/pages/overview.astro — projects / landing page
 import "../styles/global.css";
 import "../styles/home.css";
 
@@ -14,7 +14,6 @@ interface Project {
 }
 
 const name = "Lawand Ibo";
-const [first, last] = name.split(" ");
 const role = "Software Developer";
 const intro =
   "I build things that talk to each other — web apps, backends, and small AI tools that run on my own hardware.";
@@ -97,7 +96,7 @@ const year = new Date().getFullYear();
           <a href="#stack"><span class="nav-num">02</span>Stack</a>
           <a href="#contact"><span class="nav-num">03</span>Contact</a>
         </nav>
-        <a href="/ask" class="nav-ask">Ask Aria ↗</a>
+        <a href="/" class="nav-ask">Ask Aria ↗</a>
       </div>
     </header>
 
@@ -189,7 +188,7 @@ const year = new Date().getFullYear();
               Rather ask than read? <em class="italic">Aria</em> is a small AI running on my own
               machine — she knows what's on this page.
             </p>
-            <a class="btn-solid btn-solid--cream" href="/ask">
+            <a class="btn-solid btn-solid--cream" href="/">
               Ask Aria <span aria-hidden="true">↗</span>
             </a>
           </div>

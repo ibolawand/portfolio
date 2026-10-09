@@ -1,19 +1,16 @@
 ---
-// src/pages/ask.astro
+// src/pages/index.astro — the AI chat (home)
 import "../styles/global.css";
 import "../styles/ask.css";
-import Navbar from "../components/Navbar.astro";
 
 const developerName = "Lawand Ibo";
 const email = "ibolawand432@gmail.com";
-const githubProfile = "https://github.com/ibolawand";
 const suggestions = [
   "What does Lawand build?",
   "Which technologies does he use?",
   "Tell me about the home lab",
   "How can I contact him?",
 ];
-const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -41,7 +38,18 @@ const year = new Date().getFullYear();
 
     <!-- ============ TOP BAR ============ -->
   <div class="page-shell">
-    <Navbar></Navbar>
+    <header class="top">
+      <div class="top-inner">
+        <a class="brand" href="/overview" aria-label="Lawand Ibo — overview">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{developerName}</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="/overview"><span class="nav-num">00</span>Overview</a>
+        </nav>
+        <span class="ai-status" id="ai-status" data-state="checking" role="status">Checking AI…</span>
+      </div>
+    </header>
 
     <main class="ask-main">
       <div class="ask-grid">
@@ -87,6 +95,7 @@ const year = new Date().getFullYear();
             <div class="chat-head">
               <span class="kicker kicker-inv">Conversation</span>
               <span class="chat-line" aria-hidden="true"></span>
+              <button type="button" class="clear-btn" id="clear">Clear</button>
             </div>
 
             <div class="log" id="log" role="log" aria-live="polite" tabindex="0">
@@ -638,8 +647,6 @@ const year = new Date().getFullYear();
       const input = $("input") as HTMLTextAreaElement;
       const send = $("send") as HTMLButtonElement;
       const stop = $("stop") as HTMLButtonElement;
-      const statusEl = document.getElementById("ai-status");
-      const modelEl = document.getElementById("model-name");
       const greeting = log.innerHTML;
 
       let history: Msg[] = [];

@@ -89,6 +89,34 @@ body::before { opacity: 0.35; }
 .nav-ask:hover,
 .nav-ask[aria-current="page"] { background: var(--cream); color: var(--red-base); }
 
+/* AI status badge (topbar, right) */
+.ai-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: end;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  white-space: nowrap;
+}
+.ai-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cream);
+}
+.ai-status[data-state="checking"]::before { animation: status-pulse 1.2s ease-in-out infinite; }
+.ai-status[data-state="online"]::before { background: #3ddc84; }
+.ai-status[data-state="offline"]::before { background: rgba(242, 237, 228, 0.35); }
+@keyframes status-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
 /* ============================================================
    MAIN — fills remaining height, 2 columns
    ============================================================ */
@@ -213,17 +241,14 @@ body::before { opacity: 0.35; }
 /* --- Avatar row: small square + info beside --- */
 .avatar-row {
   display: grid;
-  grid-template-columns: 700px minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: stretch;
-}
-@media (min-width: 1100px) {
-  .avatar-row { grid-template-columns: 800px minmax(0, 1fr); gap: 1.5rem; }
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
 }
 
 .avatar-frame {
   position: relative;
   width: 100%;
+  max-width: 640px;
   aspect-ratio: 16 / 9;
   background: linear-gradient(
     180deg,
@@ -478,14 +503,14 @@ body::before { opacity: 0.35; }
 /* ============================================================
    MOBILE: allow scroll, stack columns
    ============================================================ */
-@media (max-width: 900) {
+@media (max-width: 900px) {
   html, body { overflow: auto; height: auto; }
   .page-shell { height: auto; min-height: 100dvh; }
   .ask-main { overflow: visible; }
   .ask-grid { height: auto; grid-template-columns: 1fr; }
   .intro-col { overflow: visible; }
   .chat-col { grid-template-rows: auto auto; }
-  .avatar-row { grid-template-columns: 110px minmax(0, 1fr); }
+  .avatar-row { grid-template-columns: 1fr; }
   .log { height: 320px; }
   .msg.bot { font-size: 1.05rem; }
   .meta-fields { grid-template-columns: 1fr 1fr; }
