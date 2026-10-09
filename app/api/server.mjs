@@ -97,6 +97,8 @@ function cleanMessages(input) {
 
 // ---------- health ----------
 
+// ---------- health ----------
+
 let healthCache = { at: 0, value: { online: false, model: MODEL } };
 async function health() {
   if (Date.now() - healthCache.at < 5000) return healthCache.value;
@@ -105,8 +107,13 @@ async function health() {
     const r = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(2000) });
     if (r.ok) {
       const data = await r.json();
-      const names = (data.models ?? []).map((m) => m.name);
-      value.online = names.some((n) => n === MODEL || n.split(":")[0] === MODEL);
+      const names = (data.models ?? []).map((m) => m.name.toLowerCase());
+      const baseModel = MODEL.toLowerCase().split(":")[0];
+      
+      // Matches exact name, tag match, or base model name (e.g. qwen2.5)
+      value.online = names.some(
+        (n) => n === MODEL.toLowerCase() || n.split(":")[0] === baseModel || n.includes(baseModel)
+      );
     }
   } catch {
     /* Ollama is not reachable */

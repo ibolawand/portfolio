@@ -1,5 +1,6 @@
 ---
 // src/pages/index.astro
+import "../styles/global.css";
 import "../styles/home.css";
 
 interface Project {
@@ -9,18 +10,16 @@ interface Project {
   status: "live" | "building" | "planned";
   link?: string;
   github?: string;
-  image?: string; // optional screenshot, e.g. "/projects/lifequest.png"
+  image?: string;
 }
 
-// ---------- Edit everything about you here ----------
 const name = "Lawand Ibo";
 const [first, last] = name.split(" ");
-const role = "Software Engineer & Systems Developer";
+const role = "Software Developer";
 const intro =
-  "I build things that talk to each other: web apps, backends, and small AI tools that run on my own hardware.";
+  "I build things that talk to each other — web apps, backends, and small AI tools that run on my own hardware.";
 const email = "ibolawand432@gmail.com";
 const github = "https://github.com/ibolawand";
-const heroPhoto = ""; // e.g. "/hero.jpg"; leave empty to show the drawn landscape
 
 const projects: Project[] = [
   {
@@ -59,23 +58,8 @@ const skills = [
   { label: "Also", items: ["C++", "Rust", "Arduino", "3D printing"] },
 ];
 
-// A few stars with a fixed pseudo-random layout (same on every build)
-const stars = Array.from({ length: 46 }, (_, i) => {
-  const r = (n: number) => {
-    const x = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453;
-    return x - Math.floor(x);
-  };
-  return { x: Math.round(r(1) * 1000), y: Math.round(r(2) * 260), s: 0.6 + r(3) * 1.3, tw: i % 4 === 0, d: (r(4) * 6).toFixed(1) };
-});
-const valleyLights = Array.from({ length: 34 }, (_, i) => {
-  const r = (n: number) => {
-    const x = Math.sin(i * 39.346 + n * 11.135) * 24634.6345;
-    return x - Math.floor(x);
-  };
-  return { x: Math.round(60 + r(1) * 560), y: Math.round(392 + r(2) * 26), o: (0.45 + r(3) * 0.55).toFixed(2), warm: r(4) > 0.35, d: (r(5) * 5).toFixed(1) };
-});
-
 const description = `${name}: ${role}. ${intro}`;
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -86,198 +70,283 @@ const description = `${name}: ${role}. ${intro}`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b1017" />
-    <meta property="og:title" content={`${name} | ${role}`} />
+    <meta name="theme-color" content="#b3222a" />
+    <meta property="og:title" content={`${name} — ${role}`} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600&family=Sora:wght@600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>{name} | {role}</title>
+    <title>{name} — {role}</title>
   </head>
   <body>
     <a href="#projects" class="skip-link">Skip to projects</a>
 
+    <!-- ============ TOP BAR ============ -->
     <header class="top">
-      <div class="wrap top-inner">
-        <a class="logo" href="#top" aria-label={`${name}, home`}>
-          <span class="logo-mark" aria-hidden="true">L</span>
-          <span class="logo-name">{name}</span>
+      <div class="top-inner">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{name}</span>
         </a>
-        <nav aria-label="Primary" class="nav">
-          <a href="#top" aria-current="page">Home</a>
-          <a href="#projects">Projects</a>
-          <a href="#stack">Stack</a>
-          <a href="#contact">Contact</a>
-          <a href="/ask" class="nav-ask">Ask Aria</a>
+        <nav class="nav" aria-label="Primary">
+          <a href="#projects"><span class="nav-num">01</span>Work</a>
+          <a href="#stack"><span class="nav-num">02</span>Stack</a>
+          <a href="#contact"><span class="nav-num">03</span>Contact</a>
         </nav>
+        <a href="/ask" class="nav-ask">Ask Aria ↗</a>
       </div>
     </header>
 
-    <main class="wrap grid" id="top">
-      <!-- Hero -->
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="scene" aria-hidden="true">
-          {
-            heroPhoto ? (
-              <img class="photo" src={heroPhoto} alt="" />
-            ) : (
-              <svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stop-color="#080d1b" />
-                    <stop offset="0.42" stop-color="#171d3a" />
-                    <stop offset="0.72" stop-color="#4b3a5e" />
-                    <stop offset="0.9" stop-color="#b9694f" />
-                    <stop offset="1" stop-color="#e09a62" />
-                  </linearGradient>
-                  <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stop-color="#9c5a52" stop-opacity="0.35" />
-                    <stop offset="1" stop-color="#1b2040" stop-opacity="0.9" />
-                  </linearGradient>
-                  <filter id="soften" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="7" /></filter>
-                  <radialGradient id="glow" cx="0.5" cy="1" r="0.7">
-                    <stop offset="0" stop-color="#f2a65a" stop-opacity="0.45" />
-                    <stop offset="1" stop-color="#f2a65a" stop-opacity="0" />
-                  </radialGradient>
-                </defs>
-                <rect width="1000" height="560" fill="url(#sky)" />
-                <rect width="1000" height="560" fill="url(#glow)" />
-                {stars.map((s) => (
-                  <circle cx={s.x} cy={s.y} r={s.s} fill="#f5f1e6" class={s.tw ? "star twinkle" : "star"} style={`animation-delay:${s.d}s`} />
-                ))}
-                <!-- far ridge -->
-                <path d="M0 360 L70 318 L130 340 L210 270 L270 312 L340 250 L420 318 L480 292 L560 340 L640 276 L720 322 L800 262 L880 318 L950 288 L1000 312 L1000 560 L0 560 Z" fill="#3a3560" />
-                <!-- middle ridge -->
-                <path d="M0 400 L90 352 L170 384 L250 330 L330 378 L400 346 L470 392 L560 350 L640 398 L720 364 L800 402 L900 366 L1000 392 L1000 560 L0 560 Z" fill="#232748" />
-                <!-- lake -->
-                <path d="M150 436 C280 426 430 428 590 438 L590 468 C430 476 280 474 150 468 Z" fill="url(#lake)" filter="url(#soften)" />
-                <!-- lights down in the valley -->
-                {valleyLights.map((l) => (
-                  <circle cx={l.x} cy={l.y} r="2.1" fill={l.warm ? "#ffd596" : "#a9c7ff"} opacity={l.o} class="light" style={`animation-delay:${l.d}s`} />
-                ))}
-                <!-- near slope and rock -->
-                <path d="M0 470 L120 448 L260 462 L420 440 L560 458 L700 420 L760 410 L1000 400 L1000 560 L0 560 Z" fill="#12152b" />
-                <path d="M640 560 L664 470 L700 420 L758 392 L842 384 L920 396 L1000 380 L1000 560 Z" fill="#090b18" />
-                <!-- someone sitting on the rock, looking at the lights -->
-                <g fill="#04050c" transform="translate(-280 -140.7) scale(1.35)">
-                  <circle cx="806" cy="338" r="13" />
-                  <path d="M792 352 C788 372 790 392 798 402 L826 402 C832 384 830 364 822 352 Z" />
-                  <path d="M826 358 C846 362 852 384 842 398 L826 396 Z" />
-                  <path d="M798 398 L760 404 C750 406 746 392 756 390 L800 384 Z" />
-                  <path d="M812 400 L770 408 C760 410 758 396 768 394 L816 388 Z" />
-                  <path d="M792 360 L780 384 L792 388 Z" />
-                </g>
-              </svg>
-            )
-          }
-        </div>
+    <main id="top">
 
-        <div class="hero-copy">
-          <p class="hi">Hi, I'm</p>
-          <h1 id="hero-title" class="name">
-            <span>{first}</span> <span class="accent">{last}</span>
+      <!-- ============ HERO ============ -->
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-kicker">
+            <span>PORTFOLIO</span>
+            <span class="hero-rule"></span>
+            <span>SELECTED WORK · {year}</span>
+          </div>
+
+          <h1 class="hero-title">
+            <span class="hero-line"><span class="hero-word">Software</span></span>
+            <span class="hero-line"><span class="hero-word hero-em"><em>Engineer</em></span></span>
+            <span class="hero-line"><span class="hero-word">based in Austria.</span></span>
           </h1>
-          <p class="role">{role}</p>
-          <p class="intro">{intro}</p>
-          <p class="cta">
-            <a class="btn btn-primary" href="#projects">See what I'm building</a>
-            <a class="btn btn-ghost" href={`mailto:${email}`}>Say hi</a>
-          </p>
-        </div>
-      </section>
 
-      <!-- Projects -->
-      <section class="panel projects" id="projects" aria-labelledby="projects-title">
-        <div class="panel-head">
-          <h2 id="projects-title">What I'm working on</h2>
-          <svg class="squiggle" viewBox="0 0 120 10" aria-hidden="true"><path d="M2 6 C 14 1, 22 9, 34 5 S 56 2, 68 6 S 92 9, 118 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
-        </div>
-        <ul class="project-list">
-          {
-            projects.map((p) => (
-              <li class="project">
-                {p.image && <img class="project-img" src={p.image} alt="" loading="lazy" />}
-                <div class="project-body">
-                  <div class="project-top">
-                    <h3>{p.title}</h3>
-                    <span class={`status ${p.status}`}>{statusLabel[p.status]}</span>
-                  </div>
-                  <p>{p.blurb}</p>
-                  <p class="tags">{p.tags.join(" · ")}</p>
-                  {(p.github || p.link) && (
-                    <p class="project-links">
-                      {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer">Code</a>}
-                      {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer">Open</a>}
-                    </p>
-                  )}
-                </div>
-              </li>
-            ))
-          }
-        </ul>
-        <aside class="note" aria-label="What I'm up to right now">
-          <p class="note-title">Right now</p>
-          <ul>
-            <li>building Aria</li>
-            <li>learning Chinese</li>
-            <li>fixing this site (again)</li>
+          <div class="hero-foot">
+            <p class="hero-lede">{intro}</p>
+            <div class="hero-cta">
+              <a class="btn-solid" href="#projects">
+                See the work <span aria-hidden="true">→</span>
+              </a>
+              <a class="btn-outline" href={`mailto:${email}`}>
+                Get in touch
+              </a>
+            </div>
+          </div>
+
+          <ul class="hero-index" aria-hidden="true">
+            <li><span>001</span><span>Angular</span></li>
+            <li><span>002</span><span>Node.js</span></li>
+            <li><span>003</span><span>Docker</span></li>
+            <li><span>004</span><span>AI / LLMs</span></li>
           </ul>
-        </aside>
-        <div class="ask-mini">
-          <h3>Rather ask than read?</h3>
-          <p>
-            Aria is a small AI that runs on my own computer at home. She knows what's on this page and can answer
-            questions about me.
-          </p>
-          <p><a class="btn btn-primary" href="/ask">Ask Aria</a></p>
         </div>
       </section>
 
-      <!-- About -->
-      <section class="panel about" id="about" aria-labelledby="about-title">
-        <h2 id="about-title">About me</h2>
-        <p>
-          I'm a software engineering student in Austria. I like finding out how things work, whether that's a
-          backend, a physics problem or a small robot.
-        </p>
-        <p>
-          Outside of code: piano, physics and maths, anime and games, and I'm slowly learning Chinese.
-        </p>
-        <p class="hand" aria-label="Progress over perfection">Progress over perfection.</p>
+      <!-- ============ PROJECTS (ink band) ============ -->
+      <section class="band band-ink" id="projects">
+        <div class="band-inner">
+          <header class="band-head">
+            <div>
+              <span class="kicker kicker-inv">01 — Selected work</span>
+              <h2 class="band-title">
+                Things I'm <em class="italic">building</em>.
+              </h2>
+            </div>
+            <p class="band-note">
+              {projects.length} projects · ongoing<br />
+              Updated whenever I ship.
+            </p>
+          </header>
+
+          <ol class="work-list" id="work-list">
+            {projects.map((p, i) => (
+              <li class="work-item" data-index={i}>
+                <a
+                  class="work-link"
+                  href={p.link ?? p.github ?? "#"}
+                  target={p.link || p.github ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                >
+                  <span class="work-num">{String(i + 1).padStart(3, "0")}</span>
+                  <span class="work-main">
+                    <span class="work-title">{p.title}</span>
+                    <span class="work-blurb">{p.blurb}</span>
+                  </span>
+                  <span class="work-tags">
+                    {p.tags.slice(0, 3).map((t) => <span>{t}</span>)}
+                  </span>
+                  <span class={`work-status ${p.status}`}>
+                    <span class="dot" aria-hidden="true"></span>
+                    {statusLabel[p.status]}
+                  </span>
+                  <span class="work-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+
+          <div class="band-cta">
+            <p>
+              Rather ask than read? <em class="italic">Aria</em> is a small AI running on my own
+              machine — she knows what's on this page.
+            </p>
+            <a class="btn-solid btn-solid--cream" href="/ask">
+              Ask Aria <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hover preview follows cursor -->
+        <div class="work-peek" id="work-peek" aria-hidden="true">
+          {projects.map((p, i) => (
+            <div class="peek-slide" data-index={i}>
+              {p.image ? (
+                <img src={p.image} alt="" />
+              ) : (
+                <div class="peek-placeholder">
+                  <span>{String(i + 1).padStart(3, "0")}</span>
+                  <span>{p.title}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
 
-      <!-- Stack -->
-      <section class="panel stack" id="stack" aria-labelledby="stack-title">
-        <h2 id="stack-title">What I use</h2>
-        <dl class="skills">
-          {
-            skills.map((g) => (
-              <div class="skill-row">
-                <dt>{g.label}</dt>
-                <dd>{g.items.join(" · ")}</dd>
-              </div>
-            ))
-          }
-        </dl>
+      <!-- ============ ABOUT + STACK (red band, deep) ============ -->
+      <section class="band band-deep" id="stack">
+        <div class="band-inner">
+          <header class="band-head">
+            <div>
+              <span class="kicker">02 — Background & tools</span>
+              <h2 class="band-title">
+                About the <em class="italic">work</em>.
+              </h2>
+            </div>
+          </header>
+
+          <div class="spread">
+            <article class="prose">
+              <p class="drop">
+                I'm a software engineering student in Austria. I like finding out how things
+                work — a backend, a physics problem, or a small robot.
+              </p>
+              <p>
+                Outside of code: piano, physics, anime, and I'm slowly learning Chinese.
+              </p>
+              <p class="signature">— Lawand</p>
+            </article>
+
+            <aside class="stack-panel">
+              <span class="kicker">Tools I reach for</span>
+              <dl class="stack">
+                {skills.map((g) => (
+                  <div class="stack-row">
+                    <dt>{g.label}</dt>
+                    <dd>{g.items.join(" · ")}</dd>
+                  </div>
+                ))}
+              </dl>
+            </aside>
+          </div>
+
+          <div class="now-strip">
+            <span class="kicker">Right now</span>
+            <ul>
+              <li>building Aria</li>
+              <li>learning Chinese</li>
+              <li>fixing this site (again)</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <!-- Contact -->
-      <section class="panel contact" id="contact" aria-labelledby="contact-title">
-        <h2 id="contact-title">Want to build something, or just say hi?</h2>
-        <p class="contact-links">
-          <a class="mail" href={`mailto:${email}`}>{email}</a>
-          <a href={github} target="_blank" rel="noopener noreferrer">GitHub</a>
-        </p>
+      <!-- ============ CONTACT (ink band) ============ -->
+      <section class="band band-ink" id="contact">
+        <div class="band-inner">
+          <span class="kicker kicker-inv">03 — Contact</span>
+          <h2 class="contact-title">
+            Let's build<br />
+            <em>something.</em>
+          </h2>
+
+          <div class="contact-grid">
+            <a class="contact-mail" href={`mailto:${email}`}>
+              <span>{email}</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="contact-gh" href={github} target="_blank" rel="noopener noreferrer">
+              <span>github.com/ibolawand</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer class="wrap footer">
-      <p>&copy; {new Date().getFullYear()} {name}. Built with Astro, hosted on a machine at home.</p>
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© {year} {name}</span>
+        <span>Built with Astro · hosted at home</span>
+        <span>Instrument Serif · Inter · JetBrains Mono</span>
+      </div>
     </footer>
+
+    <script>
+      const list = document.getElementById("work-list");
+      const peek = document.getElementById("work-peek");
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isTouch = matchMedia("(hover: none)").matches;
+
+      if (list && peek && !reduce && !isTouch) {
+        const slides = peek.querySelectorAll<HTMLElement>(".peek-slide");
+        let x = 0, y = 0, tx = 0, ty = 0, current = -1;
+
+        list.addEventListener("pointermove", (e) => {
+          const r = list.getBoundingClientRect();
+          tx = e.clientX - r.left + 32;
+          ty = e.clientY - r.top - 120;
+        });
+        list.addEventListener("pointerenter", () => peek.classList.add("on"));
+        list.addEventListener("pointerleave", () => {
+          peek.classList.remove("on");
+          current = -1;
+          slides.forEach((s) => s.classList.remove("on"));
+        });
+        list.querySelectorAll<HTMLElement>(".work-item").forEach((item) => {
+          item.addEventListener("pointerenter", () => {
+            const i = Number(item.dataset.index ?? 0);
+            if (i === current) return;
+            current = i;
+            slides.forEach((s, k) => s.classList.toggle("on", k === i));
+          });
+        });
+
+        const tick = () => {
+          x += (tx - x) * 0.18;
+          y += (ty - y) * 0.18;
+          peek.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12 }
+      );
+      document
+        .querySelectorAll<HTMLElement>(".work-item, .prose p, .stack-row")
+        .forEach((el) => {
+          el.classList.add("reveal");
+          io.observe(el);
+        });
+    </script>
   </body>
 </html>

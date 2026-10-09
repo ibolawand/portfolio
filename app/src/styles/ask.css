@@ -1,0 +1,493 @@
+/* src/styles/ask.css — Aria chat: full-viewport, 2 columns, no page scroll */
+
+
+body {
+  background: linear-gradient(
+    180deg,
+    var(--red-base) 0%,
+    var(--red-base) 10%,
+    var(--red-deep) 34%,
+    #6b1015 60%,
+    var(--ink) 85%,
+    var(--ink) 100%
+  );
+  color: var(--cream);
+}
+body::before { opacity: 0.35; }
+
+/* The whole page is a vertical flex: topbar + main */
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;      /* dynamic vh: mobile safe */
+  min-height: 0;
+}
+
+/* ============================================================
+   TOP BAR (compact)
+   ============================================================ */
+.top {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 40;
+  background: transparent;
+  border-bottom: 1px solid rgba(242,237,228,0.18);
+}
+.top-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  min-height: 3.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 0.65rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.brand-mark {
+  width: 8px; height: 8px;
+  background: var(--cream);
+  display: inline-block;
+  transform: rotate(45deg);
+}
+.nav {
+  display: none;
+  justify-content: center;
+  gap: 2rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+}
+@media (min-width: 760px) { .nav { display: flex; } }
+.nav a {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.35rem 0;
+  opacity: 0.72;
+  transition: opacity 0.2s ease;
+}
+.nav a:hover { opacity: 1; }
+.nav-num { opacity: 0.45; font-size: 0.6rem; }
+
+.nav-ask {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--cream);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-ask:hover,
+.nav-ask[aria-current="page"] { background: var(--cream); color: var(--red-base); }
+
+/* ============================================================
+   MAIN — fills remaining height, 2 columns
+   ============================================================ */
+.ask-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.ask-grid {
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0.45rem var(--gutter) 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  min-height: 0;
+}
+@media (min-width: 900px) {
+  .ask-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 3.5rem;
+    padding-block: 0.75rem 1.75rem;
+  }
+}
+
+/* ============================================================
+   LEFT COLUMN — Intro (compact)
+   ============================================================ */
+.intro-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  min-height: 0;
+  overflow-y: auto;   /* only scrolls if really short viewport */
+  padding-right: 0.5rem;
+}
+.intro-col::-webkit-scrollbar { width: 0; }
+
+.ask-kicker {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+}
+.ask-rule { flex: 1; height: 1px; background: rgba(242,237,228,0.3); }
+
+.ask-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--cream);
+  margin-top: 0.25rem;
+}
+.ask-title em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.ask-lede {
+  max-width: 46ch;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--cream);
+  opacity: 0.9;
+}
+.ask-lede a {
+  color: var(--cream);
+  border-bottom: 1px solid rgba(242,237,228,0.5);
+  transition: border-color 0.2s ease;
+}
+.ask-lede a:hover { border-color: var(--cream); }
+
+.suggest {
+  margin-top: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(242,237,228,0.22);
+}
+.suggest .kicker {
+  color: var(--cream);
+  opacity: 0.65;
+  font-size: 0.68rem;
+}
+.chips {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+.chip {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid rgba(242,237,228,0.45);
+  border-radius: var(--radius-pill);
+  color: var(--cream);
+  background: transparent;
+  text-align: left;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.chip:hover {
+  background: var(--cream);
+  color: var(--red-base);
+  border-color: var(--cream);
+}
+
+/* ============================================================
+   RIGHT COLUMN — Avatar on top, chat log below
+   ============================================================ */
+.chat-col {
+  display: grid;
+  grid-template-rows: auto 1fr;   /* avatar auto, log takes rest */
+  gap: 1rem;
+  min-height: 0;
+}
+
+/* --- Avatar row: small square + info beside --- */
+.avatar-row {
+  display: grid;
+  grid-template-columns: 700px minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+@media (min-width: 1100px) {
+  .avatar-row { grid-template-columns: 800px minmax(0, 1fr); gap: 1.5rem; }
+}
+
+.avatar-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(
+    180deg,
+    var(--red-base) 0%,
+    var(--red-base) 10%,
+    var(--red-deep) 34%,
+    #6b1015 60%,
+    var(--ink) 85%,
+    var(--ink) 100%
+  );
+  color: var(--cream);
+  border: 1px solid #6b1015;
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+.avatar-frame canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.avatar-frame.is-ready canvas { opacity: 1; }
+.avatar-frame[data-state="talking"] {
+  border-color: var(--red-bright);
+  box-shadow: 0 0 0 1px var(--red-bright), 0 0 40px -8px var(--red-bright);
+}
+.avatar-frame[data-state="thinking"] {
+  border-color: rgba(242,237,228,0.35);
+}
+.avatar-loading {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242,237,228,0.5);
+  text-align: center;
+  padding: 0.75rem;
+}
+.avatar-hint {
+  position: absolute;
+  left: 50%; bottom: 0.5rem;
+  transform: translateX(-50%);
+  padding: 0.22rem 0.6rem;
+  background: var(--red-base);
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.avatar-frame.is-ready .avatar-hint:not(.is-hidden) { opacity: 1; }
+.avatar-hint.is-hidden { opacity: 0; }
+
+/* --- Avatar-side meta --- */
+.meta {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.meta-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  align-content: center;
+  border-top: 1px solid rgba(242,237,228,0.15);
+  padding-top: 0.85rem;
+}
+.meta-fields > div { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.meta dt {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242,237,228,0.5);
+}
+.meta dd {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clear-btn {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  background: transparent;
+  border: 1px solid rgba(242,237,228,0.3);
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.clear-btn:hover {
+  background: var(--red-base);
+  border-color: var(--red-base);
+  color: var(--cream);
+}
+
+/* --- Chat log + composer: log scrolls, page doesn't --- */
+.chat-stack {
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 0.75rem;
+  min-height: 0;
+  min-width: 0;
+}
+
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+.chat-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(242,237,228,0.18);
+}
+.kicker-inv { color: rgba(242,237,228,0.55); }
+
+.log {
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 1.25rem 1.4rem;
+  background: rgba(5,5,5,0.55);
+  border: 1px solid rgba(242,237,228,0.18);
+  scrollbar-color: rgba(242,237,228,0.25) transparent;
+  scrollbar-width: thin;
+}
+.log::-webkit-scrollbar { width: 6px; }
+.log::-webkit-scrollbar-thumb { background: rgba(242,237,228,0.25); }
+
+.msg {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  max-width: 68ch;
+}
+.msg + .msg { margin-top: 1.1rem; }
+
+.msg.user {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: rgba(242,237,228,0.62);
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--red-bright);
+}
+
+.msg.bot {
+  font-family: var(--display);
+  font-size: 1.12rem;
+  line-height: 1.5;
+  color: var(--cream);
+}
+.msg.bot.thinking::after {
+  content: "…";
+  display: inline-block;
+  margin-left: 0.15em;
+  color: var(--red-bright);
+  animation: dots 1.4s steps(4) infinite;
+}
+@keyframes dots {
+  0%   { content: ""; }
+  25%  { content: "."; }
+  50%  { content: ".."; }
+  75%  { content: "..."; }
+  100% { content: ""; }
+}
+
+.msg.error {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--red-bright);
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--red-bright);
+}
+
+/* --- Composer --- */
+.composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+  align-items: end;
+  padding: 0.6rem;
+  background: var(--red-base);
+  border: 1px solid rgba(242,237,228,0.2);
+}
+.composer textarea {
+  resize: none;
+  min-height: 2.4rem;
+  max-height: 6rem;
+  padding: 0.55rem 0.8rem;
+  background: transparent;
+  border: none;
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 0.96rem;
+  line-height: 1.5;
+  outline: none;
+}
+.composer textarea::placeholder { color: rgba(242,237,228,0.55); }
+
+.btn-send, .btn-stop {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.65rem 1.1rem;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.btn-send:hover:not(:disabled) { background: var(--cream); color: var(--ink); }
+.btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-stop { background: transparent; }
+.btn-stop:hover { background: var(--ink); }
+
+.fine {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: rgba(242,237,228,0.5);
+  text-align: right;
+}
+.fine a {
+  color: var(--cream);
+  border-bottom: 1px solid rgba(242,237,228,0.3);
+  transition: border-color 0.2s ease;
+}
+.fine a:hover { border-color: var(--red-bright); color: var(--red-bright); }
+
+/* ============================================================
+   MOBILE: allow scroll, stack columns
+   ============================================================ */
+@media (max-width: 900) {
+  html, body { overflow: auto; height: auto; }
+  .page-shell { height: auto; min-height: 100dvh; }
+  .ask-main { overflow: visible; }
+  .ask-grid { height: auto; grid-template-columns: 1fr; }
+  .intro-col { overflow: visible; }
+  .chat-col { grid-template-rows: auto auto; }
+  .avatar-row { grid-template-columns: 110px minmax(0, 1fr); }
+  .log { height: 320px; }
+  .msg.bot { font-size: 1.05rem; }
+  .meta-fields { grid-template-columns: 1fr 1fr; }
+  .meta-fields > div:last-child { grid-column: 1 / -1; }
+}

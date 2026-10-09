@@ -12,13 +12,13 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isOverview = currentPath === "/overview";
 ---
 
-<header class="topbar">
-  <div class="brand">
-    <span class="mark" aria-hidden="true">{initials}</span>
+<header class="top">
+  <div class="top-inner">
+    <span class="brand-mark" aria-hidden="true">{initials}</span>
     <span class="pill status">Open to new projects</span>
   </div>
 
-  <nav class="pills" aria-label="Primary">
+  <nav class="nav" aria-label="Primary">
     {
       isOverview ? (
         <>
@@ -35,7 +35,7 @@ const isOverview = currentPath === "/overview";
         </>
          <div class="pills">
     <span
-      class="pill status ai-status"
+      class="ai-status"
       id="ai-status"
       data-state="checking"
       role="status">Checking AI…</span
