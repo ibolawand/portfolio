@@ -97,8 +97,6 @@ function cleanMessages(input) {
 
 // ---------- health ----------
 
-// ---------- health ----------
-
 let healthCache = { at: 0, value: { online: false, model: MODEL } };
 async function health() {
   if (Date.now() - healthCache.at < 5000) return healthCache.value;

@@ -25,13 +25,20 @@ const suggestions = [
       content={`Ask an AI about ${developerName}: his work, stack and projects. It runs on a local model at home.`}
     />
     <meta name="theme-color" content="#b3222a" />
+    <meta property="og:title" content={`Ask my AI — ${developerName}`} />
+    <meta
+      property="og:description"
+      content={`Ask an AI about ${developerName}: his work, stack and projects. It runs on a local model at home.`}
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>Overview — {developerName}</title>
+    <title>Ask my AI — {developerName}</title>
   </head>
   <body>
     <a href="#chat" class="skip-link">Skip to chat</a>

@@ -43,6 +43,13 @@ const projects: Project[] = [
 
 const statusLabel = { live: "Live", building: "In progress", planned: "Planned" } as const;
 
+const services = [
+  { title: "Web & desktop apps", blurb: "Full-stack Angular / Node apps and Electron desktop tools, built clean and shipped." },
+  { title: "Backends & APIs", blurb: "REST services, databases and data models with Node, Java and PostgreSQL / SQLite." },
+  { title: "AI integration", blurb: "Local LLMs, chat assistants and speech pipelines wired into real products." },
+  { title: "Automation & self-hosting", blurb: "Dockerised services, scripts and home-lab setups that save you time." },
+];
+
 const skills = [
   { label: "Frontend", items: ["Angular", "TypeScript", "HTML", "CSS"] },
   { label: "Backend", items: ["Node.js", "Express", "Java", "C#"] },
@@ -112,13 +119,16 @@ const year = new Date().getFullYear();
           </h1>
 
           <div class="hero-foot">
-            <p class="hero-lede">{intro}</p>
+            <div class="hero-lede-col">
+              <p class="avail"><span class="avail-dot" aria-hidden="true"></span>Available for freelance &amp; internship work</p>
+              <p class="hero-lede">{intro}</p>
+            </div>
             <div class="hero-cta">
-              <a class="btn-solid" href="#projects">
-                See the work <span aria-hidden="true">→</span>
+              <a class="btn-solid" href={`mailto:${email}?subject=Project%20enquiry`}>
+                Hire me <span aria-hidden="true">→</span>
               </a>
-              <a class="btn-outline" href={`mailto:${email}`}>
-                Get in touch
+              <a class="btn-outline" href="#projects">
+                See the work
               </a>
             </div>
           </div>
@@ -256,11 +266,25 @@ const year = new Date().getFullYear();
       <!-- ============ CONTACT (ink band) ============ -->
       <section class="band band-ink" id="contact">
         <div class="band-inner">
-          <span class="kicker kicker-inv">03 — Contact</span>
+          <span class="kicker kicker-inv">03 — Work with me</span>
           <h2 class="contact-title">
             Let's build<br />
             <em>something.</em>
           </h2>
+
+          <ul class="services">
+            {services.map((s) => (
+              <li class="service">
+                <h3 class="service-title">{s.title}</h3>
+                <p class="service-blurb">{s.blurb}</p>
+              </li>
+            ))}
+          </ul>
+
+          <p class="contact-lead">
+            Have a project or role in mind? The fastest way to reach me is email —
+            I usually reply within a day.
+          </p>
 
           <div class="contact-grid">
             <a class="contact-mail" href={`mailto:${email}`}>
