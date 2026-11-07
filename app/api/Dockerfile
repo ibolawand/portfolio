@@ -1,6 +1,6 @@
 FROM node:22-alpine
 WORKDIR /app
-COPY server.mjs about.md ./
+COPY server.mjs about.md site-data.json ./
 ENV NODE_ENV=production
 USER node
 EXPOSE 3000

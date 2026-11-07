@@ -15,7 +15,15 @@ const MAX_MSG_CHARS = 500;
 const MAX_HISTORY = 8;
 const MAX_BODY_BYTES = 8 * 1024;
 
-const ABOUT = readFileSync(new URL("./about.md", import.meta.url), "utf8");
+const SITE = JSON.parse(readFileSync(new URL("./site-data.json", import.meta.url), "utf8"));
+const STATUS = { live: "live", building: "in progress", planned: "planned" };
+const ABOUT = [
+  readFileSync(new URL("./about.md", import.meta.url), "utf8").trim(),
+  "## Projects (same list as the Overview page)",
+  ...SITE.projects.map((p) => `- ${p.title} (${STATUS[p.status] ?? p.status}): ${p.blurb} Built with ${p.tags.join(", ")}.`),
+  "## Stack",
+  ...SITE.skills.map((s) => `- ${s.label}: ${s.items.join(", ")}`),
+].join("\n");
 
 const SYSTEM_PROMPT = `You are the assistant on the portfolio website of Lawand Ibo, a software engineer.
 Visitors ask you about Lawand, his work, his stack and his projects.
@@ -137,12 +145,12 @@ async function chat(req, res) {
   const messages = cleanMessages(body?.messages);
   if (!messages) return json(res, 400, { error: "Please send a question." });
 
+  if (active >= MAX_CONCURRENT) {
+    return json(res, 503, { error: "The AI is busy with other visitors. Please try again in a moment." });
+  }
   const wait = rateLimited(visitorId(req));
   if (wait) {
     return json(res, 429, { error: `That's a lot of questions. Please try again in ${Math.ceil(wait / 60)} min.` }, { "Retry-After": String(wait) });
-  }
-  if (active >= MAX_CONCURRENT) {
-    return json(res, 503, { error: "The AI is busy with other visitors. Please try again in a moment." });
   }
 
   active++;

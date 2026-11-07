@@ -2,6 +2,8 @@
 // src/pages/overview.astro — projects / landing page
 import "../styles/global.css";
 import "../styles/home.css";
+// Shared with the chat API so the AI and this page list the same things.
+import siteData from "../../api/site-data.json";
 
 interface Project {
   title: string;
@@ -20,26 +22,7 @@ const intro =
 const email = "ibolawand432@gmail.com";
 const github = "https://github.com/ibolawand";
 
-const projects: Project[] = [
-  {
-    title: "MyNotes",
-    blurb: "A quest-based productivity tracker with an AI assistant, a calendar and an XP system.",
-    tags: ["Angular", "TypeScript", "Node.js", "SQLite","Electron"],
-    status: "building",
-  },
-  {
-    title: "Aria, my voice assistant",
-    blurb: "A local AI assistant with speech recognition, text-to-speech, app control and system integration.",
-    tags: ["Python", "Ollama", "Whisper", "PyAudio"],
-    status: "building",
-  },
-  {
-    title: "This website",
-    blurb: "Self-hosted at home in Docker and served through a Cloudflare Tunnel.",
-    tags: ["Astro", "TypeScript", "Docker", "Cloudflare"],
-    status: "live",
-  },
-];
+const projects = siteData.projects as Project[];
 
 const statusLabel = { live: "Live", building: "In progress", planned: "Planned" } as const;
 
@@ -50,13 +33,7 @@ const services = [
   { title: "Automation & self-hosting", blurb: "Dockerised services, scripts and home-lab setups that save you time." },
 ];
 
-const skills = [
-  { label: "Frontend", items: ["Angular", "TypeScript", "HTML", "CSS"] },
-  { label: "Backend", items: ["Node.js", "Express", "Java", "C#"] },
-  { label: "Databases", items: ["SQLite", "PostgreSQL", "MySQL"] },
-  { label: "Tools", items: ["Docker", "Git", "Linux", "VS Code"] },
-  { label: "Also", items: ["C++","Arduino", "3D printing"] },
-];
+const skills = siteData.skills;
 
 const description = `${name}: ${role}. ${intro}`;
 const year = new Date().getFullYear();

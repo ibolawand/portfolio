@@ -1,0 +1,29 @@
+{
+  "projects": [
+    {
+      "title": "MyNotes",
+      "blurb": "A quest-based productivity tracker with an AI assistant, a calendar and an XP system.",
+      "tags": ["Angular", "TypeScript", "Node.js", "SQLite", "Electron"],
+      "status": "building"
+    },
+    {
+      "title": "Aria, my voice assistant",
+      "blurb": "A local AI assistant with speech recognition, text-to-speech, app control and system integration.",
+      "tags": ["Python", "Ollama", "Whisper", "PyAudio"],
+      "status": "building"
+    },
+    {
+      "title": "This website",
+      "blurb": "Self-hosted at home in Docker and served through a Cloudflare Tunnel.",
+      "tags": ["Astro", "TypeScript", "Docker", "Cloudflare"],
+      "status": "live"
+    }
+  ],
+  "skills": [
+    { "label": "Frontend", "items": ["Angular", "TypeScript", "HTML", "CSS"] },
+    { "label": "Backend", "items": ["Node.js", "Express", "Java", "C#"] },
+    { "label": "Databases", "items": ["SQLite", "PostgreSQL", "MySQL"] },
+    { "label": "Tools", "items": ["Docker", "Git", "Linux", "VS Code"] },
+    { "label": "Also", "items": ["C++", "Arduino", "3D printing"] }
+  ]
+}

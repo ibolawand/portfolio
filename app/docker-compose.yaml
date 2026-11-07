@@ -4,7 +4,9 @@ services:
     container_name: portfolio
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      # Localhost only. Public traffic must come through cloudflared, otherwise
+      # visitors could fake the CF-Connecting-IP header and skip the rate limit.
+      - "127.0.0.1:8080:8080"
     expose:
       - "8080"
     depends_on:
