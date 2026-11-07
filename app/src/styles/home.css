@@ -626,3 +626,43 @@
   .reveal { opacity: 1; transform: none; transition: none; }
   .work-peek { display: none; }
 }
+
+/* ============================================================
+   Readability on the deep-red band: dark ink on #8f1a20 was ~2:1
+   contrast, so text there is cream instead.
+   ============================================================ */
+.band-deep,
+.band-deep .band-title,
+.band-deep .prose p,
+.band-deep .stack-row dd,
+.band-deep .now-strip ul,
+.band-deep .signature { color: var(--cream) !important; }
+.band-deep .kicker,
+.band-deep .band-note,
+.band-deep .stack-row dt { color: rgba(242,237,228,0.75); opacity: 1; }
+.band-deep .band-title em { color: var(--cream); }
+.band-deep .now-strip li::before { color: rgba(242,237,228,0.6); }
+
+/* ============================================================
+   PHONE
+   ============================================================ */
+@media (max-width: 819px) {
+  /* A fixed number column keeps every project title on the same line */
+  .work-link {
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "num main main"
+      ".   tags tags"
+      ".   stat arrow";
+    gap: 0.85rem 0.75rem;
+  }
+  .work-link:hover { padding-left: 0; }
+  .band-note { white-space: normal; }
+}
+
+@media (max-width: 640px) {
+  /* The floated "I'" drop cap breaks awkwardly on narrow screens */
+  .prose .drop::first-letter { font-size: inherit; float: none; padding: 0; line-height: inherit; color: inherit; font-style: inherit; font-family: inherit; }
+  .stack-row { grid-template-columns: 5.5rem minmax(0, 1fr); }
+  .now-strip ul { flex-direction: column; gap: 0.6rem; }
+}

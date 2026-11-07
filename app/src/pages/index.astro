@@ -73,7 +73,7 @@ const suggestions = [
 
           <p class="ask-lede">
             A small language model, running on my own machine. Ask about my work, my stack or my
-            projects — it answers from the facts on this site and can still be wrong, so
+            projects — it answers from the facts on this site and can still be wrong, so{" "}
             <a href={`mailto:${email}`}>email me</a> for anything important.
           </p>
 
@@ -120,7 +120,7 @@ const suggestions = [
             </form>
 
             <p class="fine">
-              Answers are generated locally and may be wrong.
+              Answers are generated locally and may be wrong.{" "}
               <a href={`mailto:${email}`}>Email Lawand</a> for important things.
             </p>
           </div>
@@ -676,7 +676,7 @@ const suggestions = [
         send.hidden = busy;
         stop.hidden = !busy;
         input.placeholder = online ? "Ask about Lawand…"
-                                   : "The AI is asleep right now. Email me instead.";
+                                   : "The AI is offline right now.";
       }
 
       function setOnline(on: boolean, model?: string) {

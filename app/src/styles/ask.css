@@ -34,9 +34,10 @@ body::before { opacity: 0.35; }
   border-bottom: 1px solid rgba(242,237,228,0.18);
 }
 .top-inner {
+  width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 var(--gutter);
+  padding: 0;
   min-height: 3.25rem;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -367,7 +368,7 @@ body::before { opacity: 0.35; }
 /* --- Chat log + composer: log scrolls, page doesn't --- */
 .chat-stack {
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: auto 1fr auto auto; /* head, log (grows), composer, fine print */
   gap: 0.75rem;
   min-height: 0;
   min-width: 0;
@@ -515,4 +516,42 @@ body::before { opacity: 0.35; }
   .msg.bot { font-size: 1.05rem; }
   .meta-fields { grid-template-columns: 1fr 1fr; }
   .meta-fields > div:last-child { grid-column: 1 / -1; }
+}
+
+/* ============================================================
+   PHONE: chat first, suggestions under the composer
+   ============================================================ */
+@media (max-width: 900px) {
+  /* Let the column children join one flow so they can be reordered */
+  .ask-grid { display: flex; flex-direction: column; gap: 1.25rem; padding-top: 1.25rem; padding-bottom: 2rem; }
+  .intro-col, .chat-col { display: contents; }
+  .ask-kicker { order: 1; }
+  .ask-title  { order: 2; }
+  .ask-lede   { order: 3; }
+  .avatar-row { order: 4; }
+  .chat-stack { order: 5; }
+  .suggest    { order: 6; }
+
+  .log { height: clamp(240px, 45dvh, 420px); }
+  .fine { text-align: left; }
+}
+
+@media (max-width: 760px) {
+  .top-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0;
+  }
+  .nav { display: flex; margin-left: auto; }
+  .nav .nav-num { display: none; }
+  .ask-title { font-size: clamp(2.6rem, 13vw, 3.4rem); }
+  .ask-lede { font-size: 1rem; }
+  .avatar-frame { aspect-ratio: 16 / 10; }
+
+  /* 16px+ stops iOS Safari zooming in when the field is focused */
+  .composer textarea { font-size: 1rem; }
+  .btn-send, .btn-stop { min-height: 2.75rem; }
+  .chip { min-height: 2.75rem; }
 }
