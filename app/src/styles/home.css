@@ -120,7 +120,8 @@
 .hero-lede {
   max-width: 46ch;
   font-size: 1.05rem;
-  color: var(--ink-2);
+  color: var(--cream);
+  opacity: 0.85;
 }
 .hero-lede-col { display: grid; gap: 1rem; }
 .avail {
@@ -129,13 +130,14 @@
   gap: 0.55rem;
   width: fit-content;
   padding: 0.4rem 0.85rem;
-  border: 1px solid var(--line-on-red);
+  border: 1px solid rgba(242, 237, 228, 0.35);
   border-radius: var(--radius-pill);
+  background: rgba(10, 10, 10, 0.35);
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--cream);
 }
 .avail-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -151,6 +153,10 @@
 }
 
 .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+/* The hero foot sits on the dark end of the fixed gradient: keep buttons visible there. */
+.hero-cta .btn-solid { border-color: rgba(242, 237, 228, 0.35); }
+.hero-cta .btn-outline { color: var(--cream); border-color: rgba(242, 237, 228, 0.55); }
+.hero-cta .btn-outline:hover { background: var(--cream); color: var(--ink); }
 
 .hero-index {
   display: none;
