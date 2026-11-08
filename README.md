@@ -37,22 +37,34 @@ The site is designed to feel modern, minimal, and personal while keeping the tec
 
 ```text
 portfolio/
-├── app/
-│   ├── api/
-│   │   ├── about.md
-│   │   └── server.mjs
-│   ├── public/
-│   ├── src/
-│   ├── .env.example (if added in your setup)
-│   ├── astro.config.mjs
-│   ├── docker-compose.yaml
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   ├── package.json
-│   └── tsconfig.json
 ├── README.md
-└── app/AGENTS.md
+└── app/
+    ├── api/
+    │   ├── server.mjs         # chat API (no dependencies)
+    │   ├── about.md           # bio + contact facts for the AI
+    │   └── site-data.json     # projects + skills, shared by the Overview page and the AI
+    ├── public/
+    │   ├── models/            # avatar .vrm (not in git, copy it in manually)
+    │   ├── og.png             # link-preview image
+    │   └── favicon.svg / .ico / apple-touch-icon.png
+    ├── src/
+    │   ├── pages/             # index.astro (chat), overview.astro (portfolio)
+    │   ├── scripts/avatar.ts  # 3D avatar, lazy-loaded
+    │   └── styles/            # fonts.css (self-hosted), global, ask, home
+    ├── .env.example           # copy to .env
+    ├── astro.config.mjs       # site URL, sitemap, no inline scripts (CSP)
+    ├── docker-compose.yaml    # portfolio (nginx) + chat-api + cloudflared
+    ├── Dockerfile
+    ├── nginx.conf
+    ├── security-headers.conf  # CSP and other headers, included by nginx.conf
+    └── AGENTS.md              # notes for coding agents (CLAUDE.md points here)
 ```
+
+## Editing content
+
+- Projects and skills: `app/api/site-data.json`. The Overview page and the AI both read it.
+- Everything else the AI knows: `app/api/about.md`.
+- Restart the chat API after editing either file (`docker compose up -d --build`).
 
 ## Local development
 
@@ -62,6 +74,8 @@ Requirements:
 - npm
 - Docker (optional, for containerized runs)
 - Ollama installed locally with a model such as `qwen2.5:7b`
+- On Linux with an NVIDIA GPU: the proprietary NVIDIA driver, so Ollama uses CUDA.
+  With the open-source nouveau driver it falls back to Vulkan and answers take minutes instead of ~1 s.
 
 From the app directory:
 
@@ -116,7 +130,14 @@ The project is intended for self-hosting. A typical deployment includes:
 - Cloudflare Tunnel for public access without exposing local services directly
 - Nginx as the static frontend server in production
 
-Make sure the environment contains the necessary tunnel token if you want public ingress.
+Copy `app/.env.example` to `app/.env` and set the tunnel token and model.
+
+Pushing to GitHub does not deploy. After changes, rebuild on the server with
+`docker compose up -d --build` in `app/`. Docker must start on boot, otherwise the
+site is down after a reboot (`systemctl --user enable docker-desktop` with Docker Desktop).
+
+Port 8080 is bound to localhost only: public traffic has to come through the
+Cloudflare Tunnel, which the chat API's rate limit relies on.
 
 ## Who this is for
 
