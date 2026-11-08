@@ -41,6 +41,7 @@ This exposes the built site on port `8080` and routes `/api` traffic via the loc
 - `src/pages/overview.astro` — overview/detail page
 - `api/server.mjs` — local chat backend
 - `api/about.md` — public facts the AI is allowed to reference
+- `api/site-data.json` — projects and skills, shared by the Overview page and the AI
 - `docker-compose.yaml` — app, API, and tunnel setup
 
 ## Notes

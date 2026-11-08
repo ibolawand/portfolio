@@ -30,7 +30,7 @@ services:
     environment:
       # Ollama running on the host machine:
       - OLLAMA_URL=http://host.docker.internal:11434
-      - OLLAMA_MODEL=qwen2.5:7b
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:7b}   # set in .env
       # Optional limits (defaults shown):
       # - RATE_LIMIT=12        # questions per visitor ...
       # - RATE_WINDOW_MIN=10   # ... per this many minutes
@@ -43,7 +43,3 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-
-# Also add to the "portfolio" service so nginx starts after the API exists:
-#   depends_on:
-#     - chat-api

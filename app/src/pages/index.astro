@@ -1,5 +1,6 @@
 ---
 // src/pages/index.astro — the AI chat (home)
+import "../styles/fonts.css";
 import "../styles/global.css";
 import "../styles/ask.css";
 
@@ -17,7 +18,9 @@ const suggestions = [
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta
@@ -38,12 +41,6 @@ const suggestions = [
     <meta name="twitter:image" content="https://lala-home.uk/og.png" />
     <link rel="canonical" href="https://lala-home.uk/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
     <title>Ask my AI — {developerName}</title>
   </head>
   <body>

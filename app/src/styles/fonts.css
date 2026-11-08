@@ -1,0 +1,11 @@
+/* src/styles/fonts.css: fonts are bundled with the site instead of loaded
+   from Google Fonts, so visitors' IP addresses aren't sent to Google (GDPR).
+   Each file uses unicode-range, so browsers only download the subsets a
+   page actually needs (latin, incl. ä ö ü ß). */
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";

@@ -175,9 +175,9 @@
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted-on-red);
+  color: var(--cream); /* ink on red was too faint */
 }
-.hero-index li span:first-child { color: var(--ink); }
+.hero-index li span:first-child { color: rgba(242,237,228,0.7); }
 
 /* ============== BANDS ============== */
 .band { border-bottom: 1px solid var(--ink); }

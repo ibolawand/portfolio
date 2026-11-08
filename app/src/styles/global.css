@@ -47,6 +47,7 @@ html {
 
 /* Body bekommt den Gradient */
 body {
+  font-family: var(--body); /* was unset, so text fell back to each device's default serif */
   background: linear-gradient(
     180deg,
     var(--red-base) 0%,
