@@ -11,6 +11,9 @@ const MODEL = process.env.OLLAMA_MODEL ?? "qwen2.5:7b";
 const RATE_LIMIT = Number(process.env.RATE_LIMIT ?? 12); // questions per window, per visitor
 const RATE_WINDOW_MS = Number(process.env.RATE_WINDOW_MIN ?? 10) * 60_000;
 const MAX_CONCURRENT = Number(process.env.MAX_CONCURRENT ?? 2); // answers generated at once
+// How long Ollama keeps the model in GPU memory after the last question.
+// Short, so the VRAM is free for other work; a reload takes ~5 s on CUDA.
+const KEEP_ALIVE = process.env.KEEP_ALIVE ?? "5m";
 const MAX_MSG_CHARS = 500;
 const MAX_HISTORY = 8;
 const MAX_BODY_BYTES = 8 * 1024;
@@ -166,7 +169,7 @@ async function chat(req, res) {
         body: JSON.stringify({
           model: MODEL,
           stream: true,
-          keep_alive: "30m",
+          keep_alive: KEEP_ALIVE,
           options: { temperature: 0.3, num_predict: 350, num_ctx: 3072 },
           messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
         }),

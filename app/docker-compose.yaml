@@ -35,6 +35,7 @@ services:
       # - RATE_LIMIT=12        # questions per visitor ...
       # - RATE_WINDOW_MIN=10   # ... per this many minutes
       # - MAX_CONCURRENT=2     # answers generated at the same time
+      # - KEEP_ALIVE=5m        # how long the model stays in VRAM after the last question
     extra_hosts:
       - "host.docker.internal:host-gateway"
     read_only: true
