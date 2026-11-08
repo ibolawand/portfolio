@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Add your sitemap once a production domain is set, e.g.:
-# Sitemap: https://your-domain.tld/sitemap-index.xml
+Sitemap: https://lala-home.uk/sitemap-index.xml

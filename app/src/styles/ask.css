@@ -180,7 +180,7 @@ body::before { opacity: 0.35; }
 }
 .ask-title em {
   font-style: italic;
-  color: var(--ink);
+  color: var(--cream); /* ink on red was ~2:1 contrast */
 }
 
 .ask-lede {
