@@ -555,3 +555,17 @@ body::before { opacity: 0.35; }
   .btn-send, .btn-stop { min-height: 2.75rem; }
   .chip { min-height: 2.75rem; }
 }
+
+
+/* ============================================================
+   TOP BAR readability
+   ============================================================ */
+.top .nav { font-size: 0.85rem; font-weight: 500; }
+.top .nav a { opacity: 1; padding: 0.6rem 0; border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
+.top .nav a:hover { border-bottom-color: var(--cream); }
+.top .nav-num { opacity: 0.75; font-size: 0.7rem; }
+.top .ai-status { font-size: 0.74rem; font-weight: 500; }
+.top a:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+@media (max-width: 760px) {
+  .top .nav { font-size: 0.82rem; }
+}

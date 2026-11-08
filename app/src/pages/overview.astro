@@ -72,9 +72,9 @@ const year = new Date().getFullYear();
     <!-- ============ TOP BAR ============ -->
     <header class="top">
       <div class="top-inner">
-        <a class="brand" href="#top">
+        <a class="brand" href="#top" aria-label={`${name}, back to top`}>
           <span class="brand-mark" aria-hidden="true"></span>
-          <span>{name}</span>
+          <span class="brand-name">{name}</span>
         </a>
         <nav class="nav" aria-label="Primary">
           <a href="#projects"><span class="nav-num">01</span>Work</a>

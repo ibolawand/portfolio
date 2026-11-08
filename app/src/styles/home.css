@@ -666,3 +666,27 @@
   .stack-row { grid-template-columns: 5.5rem minmax(0, 1fr); }
   .now-strip ul { flex-direction: column; gap: 0.6rem; }
 }
+
+
+/* ============================================================
+   TOP BAR readability: cream on red (~5.8:1) instead of ink (~2.9:1)
+   ============================================================ */
+.top .top-inner { width: 100%; padding: 0; }
+.top .brand { color: var(--cream); }
+.top .brand-mark { background: var(--cream); }
+.top .nav { color: var(--cream); font-size: 0.85rem; font-weight: 500; }
+.top .nav a { padding: 0.6rem 0; border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
+.top .nav a:hover { color: var(--cream); border-bottom-color: var(--cream); }
+.top .nav-num { color: var(--cream); opacity: 0.75; font-size: 0.7rem; }
+.top .nav-ask { color: var(--cream); border-color: var(--cream); font-size: 0.78rem; font-weight: 500; padding: 0.6rem 1rem; }
+.top .nav-ask:hover { background: var(--cream); color: var(--red-base); }
+.top a:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+
+/* Phone: keep Work / Stack / Contact reachable; the diamond stands in for the name */
+@media (max-width: 799px) {
+  .top .top-inner { display: flex; justify-content: space-between; gap: 0.75rem; }
+  .top .brand-name { display: none; }
+  .top .nav { display: flex; gap: 1.1rem; font-size: 0.82rem; margin-left: auto; }
+  .top .nav-num { display: none; }
+  .top .nav-ask { padding: 0.55rem 0.75rem; font-size: 0.72rem; letter-spacing: 0.08em; }
+}
